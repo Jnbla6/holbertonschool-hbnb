@@ -16,6 +16,16 @@ class Review(BaseModel):
         self.user = user
 
     @property
+    def text(self):
+        return self.__text
+
+    @text.setter
+    def text(self, value):
+        if not value or not value.strip():
+            raise ValueError('Text cannot be empty')
+        self.__text = value
+
+    @property
     def rating(self):
         return self.__rating
 

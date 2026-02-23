@@ -3,6 +3,7 @@ import uuid
 from datetime import datetime
 import re
 from app.models.basemodel import BaseModel
+
 class User(BaseModel):
     
     def __init__(self, email: str, first_name='', last_name='', is_admin=False):
@@ -21,8 +22,9 @@ class User(BaseModel):
     def first_name(self, value):
         if len(value) > 50:
             raise ValueError('First name must not exceed 50 characters')
-        else:
-            self.__first_name = value
+        if not value or not value.strip():
+            raise ValueError('First name cannot be empty')
+        self.__first_name = value
 
     @property
     def last_name(self):
@@ -32,8 +34,9 @@ class User(BaseModel):
     def last_name(self, value):
         if len(value) > 50:
             raise ValueError('Last name must not exceed 50 characters')
-        else:
-            self.__last_name = value
+        if not value or not value.strip():
+            raise ValueError('Last name cannot be empty')
+        self.__last_name = value
 
     @property
     def email(self):

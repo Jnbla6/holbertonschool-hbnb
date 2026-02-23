@@ -87,6 +87,8 @@ class HBnBFacade:
                 amenity = self.amenity_repo.get(amenity_id)
                 if amenity:
                     place.add_amenity(amenity)
+                else:
+                    return False, 'Amenity not found'
             self.place_repo.add(place)
             owner_obj.add_place(place) 
             return True, place
@@ -127,6 +129,8 @@ class HBnBFacade:
                     amenity = self.amenity_repo.get(amenity_id)
                     if amenity:
                         place.add_amenity(amenity)
+                    else:
+                        return False, 'Amenity not found'
             
             return True, None
         except (ValueError, TypeError) as e:

@@ -25,8 +25,9 @@ class Place(BaseModel):
     def title(self, value):
         if len(value) > 100:
             raise ValueError('Title must be 100 characters or less')
-        else:
-            self.__title = value
+        if not value or not value.strip():
+            raise ValueError('Title cannot be empty')
+        self.__title = value
 
     @property
     def price(self):
@@ -34,7 +35,7 @@ class Place(BaseModel):
 
     @price.setter
     def price(self, value):
-        if value < 0:
+        if value <= 0:
             raise ValueError('Price must be a positive value')
         else:
             self.__price = float(value)
@@ -74,16 +75,12 @@ class Place(BaseModel):
             self.__owner = value
 
 
-   
-
-
     def add_review(self, value):
         from app.models.review import Review
         if not isinstance(value, Review):
             raise TypeError('Value must be an instance of Review')
         if value not in self.reviews:
             self.reviews.append(value)
-            
 
 
     def add_amenity(self, value):
@@ -92,8 +89,13 @@ class Place(BaseModel):
             raise TypeError('Value must be an instance of Amenity')
         if value.id not in self.amenities:
             self.amenities.append(value.id)
-    
+            if not hasattr(self, 'amenities_objects'):
+                self.amenities_objects = []
+            self.amenities_objects.append(value)
+            
     def to_dict(self):
+        if not hasattr(self, 'amenities_objects'):
+            self.amenities_objects = []
         return {
             'id': self.id,
             'title': self.title,
@@ -107,6 +109,6 @@ class Place(BaseModel):
                 'last_name': self.owner.last_name,
                 'email': self.owner.email
             },
-            'amenities': self.amenities,
+            'amenities': [{'id': a.id, 'name': a.name} for a in self.amenities_objects],
             'reviews': [{'id': r.id, 'text': r.text, 'rating': r.rating, 'user_id': r.user} for r in self.reviews]
         }

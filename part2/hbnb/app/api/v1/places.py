@@ -80,7 +80,8 @@ class PlaceResource(Resource):
         place = api.payload
         success, result = facade.update_place(place_id, place)
         if success:
-            return {'message': 'Place updated successfully'}, 200
+            updated_place = facade.get_place(place_id)
+            return updated_place.to_dict(), 200
         if result == 'Place Not Found':
             return {'error': result}, 404
         return {'error': result}, 400

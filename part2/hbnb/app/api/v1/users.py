@@ -53,15 +53,25 @@ class UserResource(Resource):
     def put(self, user_id):
         """update user"""
         user_data = api.payload
-
+        if "email" in user_data:
+            existing_user = facade.get_user_by_email(user_data['email'])
+            if existing_user and existing_user.id != user_id:
+                return {'error': 'Email already registered'}, 400
+        
         user = facade.get_user(user_id)
         if not user:
             return {'error': 'User not found'}, 404
+            
         success, msg = facade.update_user(user_id, user_data)
         if success:
-            return {'message': 'User updated successfully'}, 200
+            updated_user = facade.get_user(user_id)
+            return {
+                'id': updated_user.id, 
+                'first_name': updated_user.first_name, 
+                'last_name': updated_user.last_name, 
+                'email': updated_user.email
+            }, 200
         else:
             if msg == 'User Not Found':
                 return {'error': msg}, 404
             return {'error': msg}, 400
-        
