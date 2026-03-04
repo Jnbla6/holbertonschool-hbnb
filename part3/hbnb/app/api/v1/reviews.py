@@ -112,7 +112,7 @@ class ReviewResource(Resource):
 
         if not review:
             return {'error': 'Review not found'}, 404
-        if review.user.id != current_user_id:
+        if review.user != current_user_id:
             return {'error': 'Unauthorized action.'}, 403
 
         success, msg = facade.delete_review(review_id)

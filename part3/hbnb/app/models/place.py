@@ -74,6 +74,11 @@ class Place(BaseModel):
         else:
             self.__owner = value
 
+    # This property is added to facilitate access to owner_id for API input validation and documentation
+    @property
+    def owner_id(self):
+        return self.owner.id
+
 
     def add_review(self, value):
         from app.models.review import Review
