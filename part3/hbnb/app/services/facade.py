@@ -182,6 +182,17 @@ class HBnBFacade:
             return None
         return place.reviews if hasattr(place, 'reviews') else []
     
+    # Helper method to check if a user has already reviewed a place
+    def has_user_reviewed_place(self, user_id, place_id):
+        reviews = self.get_reviews_by_place(place_id)
+        if not reviews:
+            return False
+        
+        for review in reviews:
+            if review.user.id == user_id:
+                return True
+        return False
+
     def update_review(self, review_id, review_data):
         try:
             review = self.review_repo.get(review_id)

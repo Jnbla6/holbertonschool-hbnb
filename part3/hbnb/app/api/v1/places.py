@@ -1,3 +1,4 @@
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from flask_restx import Namespace, Resource, fields
 from app.services import facade
 import json
@@ -43,15 +44,15 @@ class PlaceList(Resource):
     @api.expect(place_model, validate=True)
     @api.response(201, 'Place successfully created')
     @api.response(400, 'Invalid input data')
+    @jwt_required()
     def post(self):
         """Register a new place"""
         place_data = api.payload
+        place_data['owner_id'] = get_jwt_identity()  # Set owner_id to the authenticated user's ID
         success, result = facade.create_place(place_data)
         if not success:
             return {'error': result}, 400
         return result.to_dict(), 201
-
-
 
 
     @api.response(200, 'List of places retrieved successfully')
@@ -74,16 +75,31 @@ class PlaceResource(Resource):
     @api.expect(place_model)
     @api.response(200, 'Place updated successfully')
     @api.response(404, 'Place not found')
+    @api.response(403, 'Unauthorized action')
     @api.response(400, 'Invalid input data')
+    @jwt_required()
     def put(self, place_id):
         """Update a place's information"""
-        place = api.payload
-        success, result = facade.update_place(place_id, place)
+        place = facade.get_place(place_id)
+
+        # Check if the place exists
+        if not place:
+            return {'error': 'Place not found'}, 404
+        
+        # Check if the authenticated user is the owner of the place
+        if place.owner_id != get_jwt_identity():
+            return {'error': 'Unauthorized action'}, 403
+    
+        # Validate the input data
+        place_data = api.payload
+
+        # Update the place using the facade
+        success, result = facade.update_place(place_id, place_data)
         if success:
             updated_place = facade.get_place(place_id)
             return updated_place.to_dict(), 200
-        if result == 'Place Not Found':
-            return {'error': result}, 404
+        
+        # else return the error message
         return {'error': result}, 400
         
 @api.route('/<place_id>/reviews')
