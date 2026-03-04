@@ -55,7 +55,7 @@ class User(BaseModel):
     def hash_password(self, password):
         self.password = generate_password_hash(password).decode('utf-8')
     
-    def check_hash(self, password):
+    def verify_password(self, password):
         return check_password_hash(self.password, password)
 
     def add_place(self, place):
