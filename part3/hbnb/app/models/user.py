@@ -1,65 +1,98 @@
 #!/usr/bin/python3
-import uuid
-from datetime import datetime
+"""User model module for the application."""
 import re
-from app.models.basemodel import BaseModel
+from sqlalchemy import Column, String, Boolean
+from sqlalchemy.orm import validates
 from flask_bcrypt import generate_password_hash, check_password_hash
+from app.models.basemodel import BaseModel, db
+
 
 class User(BaseModel):
-    
-    def __init__(self, email: str, first_name='', last_name='', password='', is_admin=False):
-        super().__init__()
-        self.first_name = first_name
-        self.last_name = last_name
-        self.email = email
-        self.is_admin = is_admin
-        self.places = set()
-        if password:
-            self.hash_password(password)
+    """Represents a user in the system.
 
-    @property
-    def first_name(self):
-        return self.__first_name
+    Attributes:
+        email (str): The unique email address of the user.
+        first_name (str): The user's first name.
+        last_name (str): The user's last name.
+        password (str): The hashed password of the user.
+        is_admin (bool): Indicates if the user has administrative privileges.
+    """
 
-    @first_name.setter
-    def first_name(self, value):
-        if len(value) > 50:
-            raise ValueError('First name must not exceed 50 characters')
-        if not value or not value.strip():
-            raise ValueError('First name cannot be empty')
-        self.__first_name = value
+    __tablename__ = 'users'
 
-    @property
-    def last_name(self):
-        return self.__last_name
+    email = Column(String(120), nullable=False, unique=True)
+    first_name = Column(String(50), nullable=False)
+    last_name = Column(String(50), nullable=False)
+    password = Column(String(128), nullable=False)
+    is_admin = Column(Boolean, default=False)
 
-    @last_name.setter
-    def last_name(self, value):
-        if len(value) > 50:
-            raise ValueError('Last name must not exceed 50 characters')
-        if not value or not value.strip():
-            raise ValueError('Last name cannot be empty')
-        self.__last_name = value
+    def __init__(self, **kwargs):
+        """Initializes a user with given attributes.
 
-    @property
-    def email(self):
-        return self.__email
+        Args:
+            **kwargs: Dictionary of attributes to set.
+        """
+        if 'password' in kwargs:
+            kwargs['password'] = self.hash_password(kwargs['password'])
+        super().__init__(**kwargs)
 
-    @email.setter
-    def email(self, value):
+    @validates('email')
+    def validate_email(self, key, email):
+        """Validates the email format.
+
+        Args:
+            key (str): The name of the field being validated.
+            email (str): The email address to validate.
+
+        Returns:
+            str: The validated email address.
+
+        Raises:
+            ValueError: If the email format is invalid.
+        """
         pattern = r"[^@]+@[^@]+\.[^@]+"
-        if not re.match(pattern, value):
-            raise ValueError(f"Invalid email format: {value}")
-        self.__email = value
+        if not re.match(pattern, email):
+            raise ValueError(f"Invalid email format: {email}")
+        return email
+
+    @validates('first_name', 'last_name')
+    def validate_name(self, key, name):
+        """Validates first and last names.
+
+        Args:
+            key (str): The name of the field (first_name or last_name).
+            name (str): The value to validate.
+
+        Returns:
+            str: The validated name.
+
+        Raises:
+            ValueError: If the name is empty or exceeds 50 characters.
+        """
+        if not name or not name.strip():
+            raise ValueError(f"{key.replace('_', ' ').capitalize()} cannot be empty")
+        if len(name) > 50:
+            raise ValueError(f"{key.replace('_', ' ').capitalize()} must not exceed 50 characters")
+        return name
 
     def hash_password(self, password):
-        self.password = generate_password_hash(password).decode('utf-8')
-    
-    def verify_password(self, password):
-        return check_password_hash(self.password, password)
+        """Hashes a plaintext password.
 
-    def add_place(self, place):
-        from app.models.place import Place
-        if not isinstance(place, Place):
-            raise TypeError('Value must be an instance of Place')
-        self.places.add(place.id)
+        Args:
+            password (str): Plaintext password.
+
+        Returns:
+            str: Hashed password.
+        """
+        return generate_password_hash(password).decode('utf-8')
+
+    def verify_password(self, password):
+        """Verifies a password against the stored hash.
+
+        Args:
+            password (str): Plaintext password to check.
+
+        Returns:
+            bool: True if password matches, False otherwise.
+        """
+        return check_password_hash(self.password, password)

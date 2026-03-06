@@ -7,9 +7,13 @@ from app.api.v1.places import api as place_ns
 from app.api.v1.auth import api as auth_ns
 from flask_jwt_extended import JWTManager
 from flask_bcrypt import Bcrypt
+from flask_sqlalchemy import SQLAlchemy
+
 
 jwt = JWTManager()
 bcrypt = Bcrypt()
+db = SQLAlchemy()
+
 def create_app(config_class="config.DevelopmentConfig"):
     app = Flask(__name__)
     app.config.from_object(config_class)
@@ -23,5 +27,7 @@ def create_app(config_class="config.DevelopmentConfig"):
 
     jwt.init_app(app)
     bcrypt.init_app(app)
+    db.init_app(app)
+
 
     return app
