@@ -31,14 +31,14 @@ class HBnBFacade:
     
 
     def get_user_by_email(self, email):
-        return self.user_repository.get_by_attribute('email', email)
+        return self.user_repository.get_user_by_email(email)
     
     def update_user(self, user_id, user_data):
         try:
             check_user = self.user_repository.get(user_id)
             if not check_user:
                 return False, 'User Not Found'
-             
+
             user = self.user_repository.update(user_id, user_data)
             return True, None
         except (ValueError, TypeError) as e:
