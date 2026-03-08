@@ -50,9 +50,9 @@ class ReviewResource(Resource):
         if review:
             return {
                 'id': review.id, 
-                'text': review.text, 
+                'text': review.text,
                 'rating': review.rating, 
-                'user_id': review.user, 
+                'user_id': review.user,
                 'place_id': review.place
             }, 200
         return {'error': 'Review not found'}, 404
