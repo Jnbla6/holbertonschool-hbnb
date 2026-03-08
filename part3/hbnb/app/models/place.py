@@ -1,83 +1,58 @@
 #!/usr/bin/python3
-import uuid
-from datetime import datetime
+from sqlalchemy import Column, String, Boolean, Float
+from sqlalchemy.orm import validates
 from app.models.basemodel import BaseModel
 
 
 class Place(BaseModel):
+    __tablename__ = 'places'
+    
+    title = Column(String(100), nullable=False)
+    description = Column(String(200), default='')
+    price = Column(Float, nullable=False)
+    latitude = Column(Float, nullable=False)
+    longitude = Column(Float, nullable=False)
+    # self.owner = owner
+    # self.reviews = []
+    # self.amenities = []
+    
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
 
-    def __init__(self, title: str, price: float, latitude: float, longitude: float, owner, description=''):
-        super().__init__()
-        self.title = title
-        self.description = description
-        self.price = price
-        self.latitude = latitude
-        self.longitude = longitude
-        self.owner = owner
-        self.reviews = []
-        self.amenities = []
+    @validates('title')
+    def validate_title(self, key, title):
+        if len(title) > 100:
+            raise ValueError(f'{key} must be 100 characters or less')
+        if not title or not title.strip():
+            raise ValueError(f'{key} cannot be empty')
+        return title
 
-    @property
-    def title(self):
-        return self.__title
 
-    @title.setter
-    def title(self, value):
-        if len(value) > 100:
-            raise ValueError('Title must be 100 characters or less')
-        if not value or not value.strip():
-            raise ValueError('Title cannot be empty')
-        self.__title = value
+    @validates('price')
+    def validate_price(self, key, price):
+        if price <= 0:
+            raise ValueError(f'{key} must be a positive value')
+        return price
 
-    @property
-    def price(self):
-        return self.__price
-
-    @price.setter
-    def price(self, value):
-        if value <= 0:
-            raise ValueError('Price must be a positive value')
-        else:
-            self.__price = float(value)
-
-    @property
-    def latitude(self):
-        return self.__latitude
-
-    @latitude.setter
-    def latitude(self, value):
-        if value < -90 or value > 90:
+    @validates('latitude')
+    def validate_latitude(self, key, latitude):
+        if latitude < -90 or latitude > 90:
             raise ValueError('Latitude must be between -90.0 and 90.0')
-        else:
-            self.__latitude = value
+        return latitude
 
-    @property
-    def longitude(self):
-        return self.__longitude
-
-    @longitude.setter
-    def longitude(self, value):
-        if value < -180 or value > 180:
+    @validates('longitude')
+    def validate_longitude(self, key, longitude):
+        if longitude < -180 or longitude > 180:
             raise ValueError('Longitude must be between -180.0 and 180.0')
-        else:
-            self.__longitude = value
+        return longitude
 
-    @property
-    def owner(self):
-        return self.__owner
-
-    @owner.setter
-    def owner(self, value):
-        from app.models.user import User
-        if not isinstance(value, User):
-            raise TypeError('Owner must be an instance of User')
-        else:
-            self.__owner = value
-
-    # This property is added to facilitate access to owner_id for API input validation and documentation
-    @property
-    def owner_id(self):
-        return self.owner.id
+    # @owner.setter
+    # def owner(self, value):
+    #     from app.models.user import User
+    #     if not isinstance(value, User):
+    #         raise TypeError('Owner must be an instance of User')
+    #     else:
+    #         self.__owner = value
 
 
     def add_review(self, value):
@@ -97,23 +72,3 @@ class Place(BaseModel):
             if not hasattr(self, 'amenities_objects'):
                 self.amenities_objects = []
             self.amenities_objects.append(value)
-            
-    def to_dict(self):
-        if not hasattr(self, 'amenities_objects'):
-            self.amenities_objects = []
-        return {
-            'id': self.id,
-            'title': self.title,
-            'description': self.description,
-            'price': self.price,
-            'latitude': self.latitude,
-            'longitude': self.longitude,
-            'owner': {
-                'id': self.owner.id,
-                'first_name': self.owner.first_name,
-                'last_name': self.owner.last_name,
-                'email': self.owner.email
-            },
-            'amenities': [{'id': a.id, 'name': a.name} for a in self.amenities_objects],
-            'reviews': [{'id': r.id, 'text': r.text, 'rating': r.rating, 'user_id': r.user} for r in self.reviews]
-        }

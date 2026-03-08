@@ -1,26 +1,21 @@
 #!/usr/bin/python3
-import uuid
-from datetime import datetime
+from sqlalchemy import Column, String
+from sqlalchemy.orm import validates
 from app.models.basemodel import BaseModel
 
 
 class Amenity(BaseModel):
+    __tablename__ = 'amenities'
+    name = Column(String(50), nullable=False)
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
     
-    def __init__(self, name: str):
-        super().__init__()
-        self.name = name
-    
-    @property
-    def name(self):
-        return self.__name
-    
-    @name.setter
-    def name(self, value):
-
-        if not value:
+    @validates('name')
+    def validate_name(self, key, name):
+        if not name or not name.strip():
             raise ValueError('Enter a Name')
         
-        if len(value) > 50:
+        if len(name) > 50:
             raise ValueError('Name cannot exceed 50 characters')
         
-        self.__name = value.strip().upper()
+        return name.strip().upper()
