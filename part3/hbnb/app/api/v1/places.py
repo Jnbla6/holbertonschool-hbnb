@@ -1,4 +1,4 @@
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import get_jwt, jwt_required, get_jwt_identity
 from flask_restx import Namespace, Resource, fields
 from app.services import facade
 import json
@@ -86,8 +86,8 @@ class PlaceResource(Resource):
         if not place:
             return {'error': 'Place not found'}, 404
         
-        # Check if the authenticated user is the owner of the place
-        if place.owner_id != get_jwt_identity():
+        # Check if the authenticated user is the owner of the place or an admin
+        if place.owner_id != get_jwt_identity() and not get_jwt().get('is_admin', False):
             return {'error': 'Unauthorized action'}, 403
     
         # Validate the input data
