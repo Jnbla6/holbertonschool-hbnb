@@ -88,7 +88,7 @@ class HBnBFacade:
             owner_obj = self.user_repository.get(owner_id)
             if not owner_obj:
                 return False, "Owner not found. A valid User instance is required."
-            place_data['owner'] = owner_obj
+            place_data['owner_id'] = owner_obj.id
             place = Place(**place_data)
             for amenity_id in amenity_ids:
                 amenity = self.amenity_repository.get(amenity_id)
@@ -97,7 +97,6 @@ class HBnBFacade:
                 else:
                     return False, 'Amenity not found'
             self.place_repository.add(place)
-            owner_obj.add_place(place) 
             return True, place
         except (TypeError, ValueError) as e:
             return False, str(e)
