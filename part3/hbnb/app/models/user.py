@@ -2,7 +2,7 @@
 """User model module for the application."""
 import re
 from sqlalchemy import Column, String, Boolean
-from sqlalchemy.orm import validates
+from sqlalchemy.orm import validates, relationship
 from flask_bcrypt import generate_password_hash, check_password_hash
 from app.models.basemodel import BaseModel, db
 
@@ -15,6 +15,9 @@ class User(BaseModel):
     last_name = Column(String(50), nullable=False)
     password = Column(String(128), nullable=False)
     is_admin = Column(Boolean, default=False)
+
+    places = relationship('Place', backref='user', lazy=True)
+    reviews = relationship('Review', backref='user', lazy=True)
 
     def __init__(self, **kwargs):
         

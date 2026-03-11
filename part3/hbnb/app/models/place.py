@@ -1,7 +1,12 @@
 #!/usr/bin/python3
-from sqlalchemy import Column, String, Boolean, Float
-from sqlalchemy.orm import validates
-from app.models.basemodel import BaseModel
+from sqlalchemy import Column, String, Boolean, Float, ForeignKey
+from sqlalchemy.orm import validates, relationship
+from app.models.basemodel import BaseModel, db
+
+place_amenity = db.Table('place_amenity',
+    Column('place_id', String(36), ForeignKey('places.id'), primary_key=True),
+    Column('amenity_id', String(36), ForeignKey('amenities.id'), primary_key=True)
+)
 
 
 class Place(BaseModel):
@@ -12,10 +17,11 @@ class Place(BaseModel):
     price = Column(Float, nullable=False)
     latitude = Column(Float, nullable=False)
     longitude = Column(Float, nullable=False)
-    # self.owner = owner
-    # self.reviews = []
-    # self.amenities = []
+    owner_id = Column(String(36), ForeignKey('users.id'), nullable=False)
     
+    reviews = relationship('Review', backref='place', lazy=True, cascade="all, delete-orphan")
+    amenities = relationship('Amenity', secondary=place_amenity, backref='place_amenities', lazy='subquery')
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
