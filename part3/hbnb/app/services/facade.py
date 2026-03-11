@@ -4,14 +4,20 @@ from app.models.place import Place
 from app.models.user import User
 from app.models.review import Review
 from app.services.repositories.user_repository import UserRepository
+from app.services.repositories.review_repository import ReviewRepository
+from app.services.repositories.amenity_repository import AmenityRepository
+from app.services.repositories.place_repository import PlaceRepository
+
+
+    
 
 
 class HBnBFacade:
     def __init__(self):
         self.user_repository = UserRepository()
-        self.place_repository = SQLAlchemyRepository(Place)
-        self.review_repository = SQLAlchemyRepository(Review)
-        self.amenity_repository = SQLAlchemyRepository(Amenity)
+        self.place_repository = PlaceRepository()
+        self.review_repository = ReviewRepository()
+        self.amenity_repository = AmenityRepository()
 
     
     #User Method
@@ -31,14 +37,14 @@ class HBnBFacade:
     
 
     def get_user_by_email(self, email):
-        return self.user_repository.get_by_attribute('email', email)
+        return self.user_repository.get_user_by_email(email)
     
     def update_user(self, user_id, user_data):
         try:
             check_user = self.user_repository.get(user_id)
             if not check_user:
                 return False, 'User Not Found'
-             
+
             user = self.user_repository.update(user_id, user_data)
             return True, None
         except (ValueError, TypeError) as e:
@@ -61,17 +67,17 @@ class HBnBFacade:
         return self.amenity_repository.get_all()
 
     def get_amenity_by_name(self, amenity_name):
-        return self.amenity_repository.get_by_attribute('name', amenity_name)
+        return self.amenity_repository.get_amenity_by_name(amenity_name)
 
     def update_amenity(self, amenity_id, amenity_data):
-         try:
+        try:
             check_amenity = self.amenity_repository.get(amenity_id)
             if not check_amenity:
                 return False, 'Amenity Not Found'
-   
+
             amenity = self.amenity_repository.update(amenity_id, amenity_data)
             return True, None
-         except (ValueError, TypeError) as e:
+        except (ValueError, TypeError) as e:
             return False, str(e)
     
     # Place Methods
@@ -177,12 +183,8 @@ class HBnBFacade:
         return self.review_repository.get_all()
 
     def get_reviews_by_place(self, place_id):
-        
-        place = self.place_repository.get(place_id)
-        if not place:
-            return None
-        return place.reviews if hasattr(place, 'reviews') else []
-    
+        return self.review_repository.get_reviews_by_place_id(place_id)
+
     # Helper method to check if a user has already reviewed a place
     def has_user_reviewed_place(self, user_id, place_id):
         reviews = self.get_reviews_by_place(place_id)
