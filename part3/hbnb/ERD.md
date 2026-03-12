@@ -1,3 +1,4 @@
+```mermaid
 erDiagram
     users {
         CHAR(36) id PK
@@ -12,7 +13,7 @@ erDiagram
         CHAR(36) id PK
         VARCHAR(255) title
         TEXT description
-        DECIMAL(10_2) price
+        DECIMAL price
         FLOAT latitude
         FLOAT longitude
         CHAR(36) owner_id FK
@@ -32,15 +33,14 @@ erDiagram
     }
     
     place_amenity {
-        CHAR(36) place_id PK, FK
-        CHAR(36) amenity_id PK, FK
+        CHAR(36) place_id PK
+        CHAR(36) amenity_id PK
     }
     
-    %% Relationships
-    users ||--o{ places : "owns (1:N)"
-    users ||--o{ reviews : "writes (1:N)"
-    places ||--o{ reviews : "receives (1:N)"
+    users ||--o{ places : owns
+    users ||--o{ reviews : writes
+    places ||--o{ reviews : receives
     
-    %% Many-to-Many Relationship handled by association table
-    places ||--o{ place_amenity : "has (1:N)"
-    amenities ||--o{ place_amenity : "belongs to (1:N)"
+    places ||--o{ place_amenity : has
+    amenities ||--o{ place_amenity : belongs_to
+```
