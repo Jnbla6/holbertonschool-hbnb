@@ -2,7 +2,7 @@
 from app.models.user import User
 from app.models.place import Place
 from app.models.basemodel import BaseModel
-from sqlalchemy import Column, String, Boolean, Integer
+from sqlalchemy import Column, String, Boolean, Integer, ForeignKey
 from sqlalchemy.orm import validates
 
 
@@ -11,6 +11,10 @@ class Review(BaseModel):
     __tablename__ = 'reviews'
     text = Column(String(200), nullable=False)
     rating = Column(Integer, nullable=False)
+    
+    place_id = Column(String(36), ForeignKey('places.id'), nullable=False)
+    user_id = Column(String(36), ForeignKey('users.id'), nullable=False)
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
