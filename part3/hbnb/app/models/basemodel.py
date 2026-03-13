@@ -26,3 +26,14 @@ class BaseModel(db.Model):
             else:
                 raise ValueError(f"Attribute '{key}' does not exist in {self.__class__.__name__}")
         self.save()
+
+    def to_dict(self):
+        """Returns a dictionary representation of the instance"""
+        obj_dict = {}
+        for column in self.__table__.columns:
+            value = getattr(self, column.name)
+            if isinstance(value, datetime):
+                obj_dict[column.name] = value.isoformat()
+            else:
+                obj_dict[column.name] = value
+        return obj_dict
