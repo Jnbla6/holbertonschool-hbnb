@@ -5,8 +5,7 @@
 ## Project Overview
 
 The goal of this project is to design and build a scalable application that manages the lifecycle of:
-- **Users:** Registration, authentication, and profile management.
-- **Owner:** create places and manage them.
+- **Users:** Registration, JWT authentication (Bcrypt), profile management, and property creation/management.
 - **Places:** Listing properties and descriptions.
 - **Reviews:** User-generated feedback and ratings.
 - **Amenities:** Tagging system for property features.
@@ -21,14 +20,13 @@ The system is designed using a **Layered Architecture** pattern to ensure separa
 
 Communication between these layers is streamlined using the **Facade Design Pattern**.
 
-## Current Phase: Technical Documentation
+## Project Phases
 
-We are currently in the design phase, focusing on creating a comprehensive architectural blueprint before implementation. This includes:
-* High-Level Package Diagrams.
-* Detailed Class Diagrams for the Business Logic.
-* Sequence Diagrams for API interactions.
+The project evolved through three main phases, each with its own detailed documentation:
 
-For detailed documentation, please refer to the [`part1/`](./part1/) directory.
+* **[Part 1: Technical Documentation](./part1/):** Architectural design, UML diagrams (Class, Package, Sequence), and the comprehensive technical blueprint.
+* **[Part 2: Business Logic & API](./part2/):** Core domain models implementation, RESTful API endpoints setup, and In-Memory storage integration.
+* **[Part 3: Authentication & Database](./part3/):** Security implementation (JWT, Bcrypt) and migration to a persistent database (SQLite/MySQL) using SQLAlchemy.
 
 ## Authors
 
@@ -38,4 +36,3 @@ For detailed documentation, please refer to the [`part1/`](./part1/) directory.
 
 ---
 *Holberton School - Software Engineering Track*
-
