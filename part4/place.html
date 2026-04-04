@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="View detailed information about this property including amenities, reviews, and pricing on HBNB.">
+    <title>Place Details &mdash; HBNB</title>
+    <link rel="icon" type="image/png" href="images/icon.png">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Icon helper */
+        .icon-text { display:flex; align-items:center; gap:0.45rem; }
+        .icon-text svg { flex-shrink:0; color:var(--text-secondary); }
+    </style>
+</head>
+<body>
+
+    <!-- ===== HEADER ===== -->
+    <header>
+        <div class="header-inner">
+            <a href="index.html" aria-label="HBNB Home">
+                <img src="images/logo.png" alt="HBNB Logo" class="logo">
+            </a>
+            <nav aria-label="Main navigation">
+                <a href="index.html">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px; margin-right:2px;"><polyline points="15 18 9 12 15 6"/></svg>
+                    All places
+                </a>
+                <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark/light mode">
+                    <svg id="icon-moon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                    <svg id="icon-sun" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                </button>
+                <a href="login.html" class="login-button" id="login-link">Login</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+
+        <!-- ===== HERO IMAGE ===== -->
+        <div class="place-hero" aria-label="Property photo">
+            <img
+                src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=1400&q=80"
+                alt="Luxury Oceanfront Bungalow exterior view"
+            >
+            <div class="place-hero-overlay"></div>
+            <div class="place-hero-content">
+                <h1>Luxury Oceanfront Bungalow</h1>
+                <div class="place-hero-badges">
+                    <span class="place-badge">Entire home</span>
+                    <span class="place-badge">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        4.97 &middot; 128 reviews
+                    </span>
+                    <span class="place-badge">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                        Malibu, California
+                    </span>
+                    <span class="place-badge">Superhost</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== TWO-COLUMN LAYOUT ===== -->
+        <div class="place-layout">
+
+            <!-- LEFT: Details -->
+            <div>
+                <section class="place-details" aria-label="Property details">
+                    <div class="place-info">
+
+                        <!-- Host -->
+                        <div class="place-info-section">
+                            <h2>Hosted by James Holden</h2>
+                            <div class="host-info">
+                                <div class="host-avatar-placeholder" aria-hidden="true">J</div>
+                                <div>
+                                    <div class="host-name">James Holden</div>
+                                    <div class="host-meta">Superhost &middot; 3 years hosting &middot; 200+ guests</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Overview -->
+                        <div class="place-info-section">
+                            <h2>Overview</h2>
+                            <div class="overview-grid">
+                                <div class="overview-item">
+                                    <div class="overview-item-icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                                    </div>
+                                    <div class="overview-item-value">8 guests</div>
+                                    <div class="overview-item-label">Max capacity</div>
+                                </div>
+                                <div class="overview-item">
+                                    <div class="overview-item-icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4v16"/><path d="M2 8h18a2 2 0 0 1 2 2v10"/><path d="M2 17h20"/><path d="M6 8v9"/></svg>
+                                    </div>
+                                    <div class="overview-item-value">4 bedrooms</div>
+                                    <div class="overview-item-label">Bedrooms</div>
+                                </div>
+                                <div class="overview-item">
+                                    <div class="overview-item-icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h16"/><path d="M4 6c0-1.1.9-2 2-2h2a2 2 0 0 1 2 2v6H4V6z"/><path d="M2 18h20v2H2z"/></svg>
+                                    </div>
+                                    <div class="overview-item-value">3 baths</div>
+                                    <div class="overview-item-label">Bathrooms</div>
+                                </div>
+                                <div class="overview-item">
+                                    <div class="overview-item-icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                                    </div>
+                                    <div class="overview-item-value">$320/night</div>
+                                    <div class="overview-item-label">Price</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="place-info-section">
+                            <h2>About this place</h2>
+                            <p class="description-text">
+                                Welcome to our stunning oceanfront bungalow perched on the cliffs of Malibu with breathtaking panoramic views of the Pacific Ocean. This luxurious retreat blends rustic charm with modern elegance, featuring floor-to-ceiling windows, a private infinity pool, and a sun terrace perfect for memorable sunsets.
+                            </p>
+                            <p class="description-text" style="margin-top:0.85rem;">
+                                The open-plan living space flows seamlessly from the gourmet kitchen to the ocean-view lounge, while all four bedrooms offer plush king-sized beds and en-suite bathrooms. A perfect escape for families, groups, or romantic getaways.
+                            </p>
+                        </div>
+
+                        <!-- Amenities -->
+                        <div class="place-info-section">
+                            <h2>What this place offers</h2>
+                            <div class="amenities-grid">
+                                <div class="amenity-item">
+                                    <img src="images/icon_wifi.png" alt="">
+                                    <span>High-speed Wi-Fi</span>
+                                </div>
+                                <div class="amenity-item">
+                                    <img src="images/icon_bed.png" alt="">
+                                    <span>King beds</span>
+                                </div>
+                                <div class="amenity-item">
+                                    <img src="images/icon_bath.png" alt="">
+                                    <span>Private pool</span>
+                                </div>
+                                <div class="amenity-item">
+                                    <svg class="amenity-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2h1l1 9h14l1-9h1"/><path d="M8 2v9"/><path d="M16 2v9"/><path d="M2 21h20"/><path d="M12 11v10"/></svg>
+                                    <span>Gourmet kitchen</span>
+                                </div>
+                                <div class="amenity-item">
+                                    <svg class="amenity-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+                                    <span>Free parking</span>
+                                </div>
+                                <div class="amenity-item">
+                                    <svg class="amenity-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2"/></svg>
+                                    <span>Air conditioning</span>
+                                </div>
+                                <div class="amenity-item">
+                                    <svg class="amenity-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="15" rx="2" ry="2"/><polyline points="17 2 12 7 7 2"/></svg>
+                                    <span>Smart TV</span>
+                                </div>
+                                <div class="amenity-item">
+                                    <svg class="amenity-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+                                    <span>Ocean view</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+
+                <!-- ===== REVIEWS ===== -->
+                <section id="reviews" aria-label="Guest reviews">
+                    <div class="reviews-header">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        <h2>4.97 &middot; 128 reviews</h2>
+                    </div>
+
+                    <div class="reviews-grid">
+                        <article class="review-card">
+                            <div class="review-card-header">
+                                <div class="reviewer-avatar" aria-hidden="true">S</div>
+                                <div>
+                                    <div class="reviewer-name">Sarah Mitchell</div>
+                                    <div class="reviewer-date">March 2024</div>
+                                </div>
+                            </div>
+                            <div class="review-rating" aria-label="5 out of 5 stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                            <p class="review-text">Absolutely stunning property! The ocean views are even more breathtaking in person. James was an exceptional host — super communicative and left lots of local tips. We'll definitely be back!</p>
+                        </article>
+
+                        <article class="review-card">
+                            <div class="review-card-header">
+                                <div class="reviewer-avatar" style="background:#00A699;" aria-hidden="true">M</div>
+                                <div>
+                                    <div class="reviewer-name">Marcus Lee</div>
+                                    <div class="reviewer-date">February 2024</div>
+                                </div>
+                            </div>
+                            <div class="review-rating" aria-label="5 out of 5 stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                            <p class="review-text">One of the best stays of my life. The infinity pool overlooking the Pacific is unreal. Super clean, perfectly stocked kitchen, and the beds are incredibly comfortable. 10/10!</p>
+                        </article>
+
+                        <article class="review-card">
+                            <div class="review-card-header">
+                                <div class="reviewer-avatar" style="background:#FC642D;" aria-hidden="true">A</div>
+                                <div>
+                                    <div class="reviewer-name">Amelia Torres</div>
+                                    <div class="reviewer-date">January 2024</div>
+                                </div>
+                            </div>
+                            <div class="review-rating" aria-label="4 out of 5 stars">&#9733;&#9733;&#9733;&#9733;&#9734;</div>
+                            <p class="review-text">Magical spot for a family getaway. The kids loved the pool and beach access. Sunsets from the terrace are something we'll never forget. Minor note: parking can be tricky.</p>
+                        </article>
+                    </div>
+                </section>
+
+                <!-- ===== ADD REVIEW (inline) ===== -->
+                <section class="add-review" id="add-review" aria-label="Add your review">
+                    <h2>Share your experience</h2>
+                    <form class="form" id="review-form" novalidate>
+                        <div class="form-group">
+                            <label for="reviewer-name-input">Your name</label>
+                            <input type="text" id="reviewer-name-input" name="reviewer-name" placeholder="Enter your name" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Your rating</label>
+                            <div class="star-rating-input" role="group" aria-label="Rate this property">
+                                <input type="radio" id="star5" name="rating" value="5" required>
+                                <label for="star5" aria-label="5 stars">&#9733;</label>
+                                <input type="radio" id="star4" name="rating" value="4">
+                                <label for="star4" aria-label="4 stars">&#9733;</label>
+                                <input type="radio" id="star3" name="rating" value="3">
+                                <label for="star3" aria-label="3 stars">&#9733;</label>
+                                <input type="radio" id="star2" name="rating" value="2">
+                                <label for="star2" aria-label="2 stars">&#9733;</label>
+                                <input type="radio" id="star1" name="rating" value="1">
+                                <label for="star1" aria-label="1 star">&#9733;</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="review-text">Your review</label>
+                            <textarea id="review-text" name="review-text" rows="5" placeholder="Share your experience at this property..." required></textarea>
+                        </div>
+                        <div>
+                            <button type="submit" class="submit-btn" id="submit-review-btn">Submit review</button>
+                        </div>
+                    </form>
+                </section>
+
+            </div><!-- end left col -->
+
+            <!-- RIGHT: Booking Card -->
+            <aside aria-label="Booking information">
+                <div class="booking-card">
+                    <div class="booking-price">
+                        $320 <span>/ night</span>
+                    </div>
+                    <div class="booking-rating">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        4.97 &middot; 128 reviews
+                    </div>
+
+                    <div class="booking-features">
+                        <div class="booking-feature">
+                            <span>Check-in</span>
+                            <span>Flexible</span>
+                        </div>
+                        <div class="booking-feature">
+                            <span>Check-out</span>
+                            <span>Flexible</span>
+                        </div>
+                        <div class="booking-feature">
+                            <span>Guests</span>
+                            <span>Up to 8</span>
+                        </div>
+                    </div>
+
+                    <div style="border-top:1px solid var(--border-light); padding-top:1rem; display:flex; flex-direction:column; gap:0.5rem; margin-bottom:1rem;">
+                        <div style="display:flex; justify-content:space-between; font-size:0.82rem; color:var(--text-secondary);">
+                            <span>$320 &times; 7 nights</span>
+                            <span>$2,240</span>
+                        </div>
+                        <div style="display:flex; justify-content:space-between; font-size:0.82rem; color:var(--text-secondary);">
+                            <span>Cleaning fee</span>
+                            <span>$120</span>
+                        </div>
+                        <div style="display:flex; justify-content:space-between; font-size:0.82rem; color:var(--text-secondary);">
+                            <span>Service fee</span>
+                            <span>$180</span>
+                        </div>
+                        <div class="booking-total">
+                            <span>Total before taxes</span>
+                            <span>$2,540</span>
+                        </div>
+                    </div>
+
+                    <a href="add_review.html" class="book-button" id="book-now-btn">Reserve</a>
+                    <p class="booking-note">You won&rsquo;t be charged yet</p>
+                </div>
+            </aside>
+
+        </div><!-- end place-layout -->
+    </main>
+
+    <!-- ===== FOOTER ===== -->
+    <footer>
+        <div class="footer-inner">
+            <div class="footer-bottom">
+                <p class="footer-copyright">&copy; 2024 HBNB, Inc. &middot; All rights reserved.</p>
+                <nav style="display:flex; gap:1.5rem;">
+                    <a href="index.html" style="font-size:0.78rem; color:var(--text-secondary);">Explore</a>
+                    <a href="login.html" style="font-size:0.78rem; color:var(--text-secondary);">Login</a>
+                </nav>
+            </div>
+        </div>
+    </footer>
+
+    <script src="scripts.js"></script>
+</body>
+</html>

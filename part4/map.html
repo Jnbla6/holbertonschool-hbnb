@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Discover hotels near you on an interactive map. Filter by price and rating on HBNB.">
+    <title>Explore on Map &mdash; HBNB</title>
+    <link rel="icon" type="image/png" href="images/icon.png">
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+
+    <!-- Shared styles + Map styles -->
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="map.css">
+</head>
+<body class="map-page">
+
+    <!-- ===== MAP HEADER ===== -->
+    <header class="map-header">
+        <div class="map-header-inner">
+            <a href="index.html" aria-label="HBNB Home" class="map-logo-link">
+                <img src="images/logo.png" alt="HBNB Logo" class="logo">
+            </a>
+
+            <!-- Search Bar -->
+            <div class="map-search-wrap" role="search">
+                <div class="map-search-bar">
+                    <svg class="map-search-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    <input
+                        type="text"
+                        id="map-search-input"
+                        class="map-search-input"
+                        placeholder="Search city, address, or landmark..."
+                        autocomplete="off"
+                        aria-label="Search location"
+                    >
+                    <button class="map-search-clear" id="search-clear-btn" aria-label="Clear search" style="display:none;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                    </button>
+                </div>
+                <!-- Autocomplete dropdown -->
+                <ul class="map-search-dropdown" id="search-dropdown" role="listbox" aria-label="Search suggestions"></ul>
+            </div>
+
+            <!-- Nav -->
+            <nav class="map-nav" aria-label="Map navigation">
+                <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
+                    <svg id="icon-moon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                    <svg id="icon-sun" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                </button>
+                <a href="index.html" class="map-nav-link">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                    Back to listings
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- ===== MAIN MAP LAYOUT ===== -->
+    <div class="map-layout">
+
+        <!-- ── LEFT SIDEBAR ── -->
+        <aside class="map-sidebar" id="map-sidebar" aria-label="Hotel list and filters">
+
+            <!-- Filters -->
+            <div class="sidebar-filters">
+                <div class="filters-row">
+                    <div class="filter-chip-group" aria-label="Filter by price">
+                        <span class="filter-chip-label">Price</span>
+                        <button class="filter-chip active" data-filter="price" data-value="all" id="price-all">All</button>
+                        <button class="filter-chip" data-filter="price" data-value="budget" id="price-budget">$</button>
+                        <button class="filter-chip" data-filter="price" data-value="mid" id="price-mid">$$</button>
+                        <button class="filter-chip" data-filter="price" data-value="luxury" id="price-luxury">$$$</button>
+                    </div>
+                    <div class="filter-chip-group" aria-label="Filter by rating">
+                        <span class="filter-chip-label">Rating</span>
+                        <button class="filter-chip active" data-filter="rating" data-value="all" id="rating-all">All</button>
+                        <button class="filter-chip" data-filter="rating" data-value="3" id="rating-3">3+</button>
+                        <button class="filter-chip" data-filter="rating" data-value="4" id="rating-4">4+</button>
+                        <button class="filter-chip" data-filter="rating" data-value="4.5" id="rating-45">4.5+</button>
+                    </div>
+                </div>
+                <div class="results-count" id="results-count" aria-live="polite">
+                    <span id="results-number">0</span> hotels found
+                </div>
+            </div>
+
+            <!-- Hotel List -->
+            <div class="hotel-list" id="hotel-list" role="list" aria-label="Hotel results">
+                <!-- Populated by map_hotels.js -->
+                <div class="list-loading" id="list-loading">
+                    <div class="spinner"></div>
+                    <p>Finding hotels near you...</p>
+                </div>
+            </div>
+
+            <!-- Sidebar Toggle (mobile) -->
+            <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle hotel list">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+                <span id="sidebar-toggle-label">Show list</span>
+            </button>
+        </aside>
+
+        <!-- ── MAP CONTAINER ── -->
+        <div class="map-wrapper">
+            <div id="hotel-map" aria-label="Interactive hotel map"></div>
+
+            <!-- Map Controls overlay -->
+            <div class="map-controls-overlay">
+                <button class="map-ctrl-btn" id="locate-me-btn" title="Find my location" aria-label="Use my current location">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+                </button>
+                <button class="map-ctrl-btn" id="zoom-in-btn" title="Zoom in" aria-label="Zoom in">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+                </button>
+                <button class="map-ctrl-btn" id="zoom-out-btn" title="Zoom out" aria-label="Zoom out">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+                </button>
+            </div>
+
+            <!-- Map info toast -->
+            <div class="map-toast" id="map-toast" role="status" aria-live="polite"></div>
+        </div>
+
+    </div><!-- end map-layout -->
+
+    <!-- ===== HOTEL DETAIL PANEL (slides in on marker click) ===== -->
+    <div class="hotel-detail-panel" id="hotel-detail-panel" aria-label="Hotel details" aria-hidden="true">
+        <button class="panel-close-btn" id="panel-close-btn" aria-label="Close hotel details">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+        <div class="panel-content" id="panel-content">
+            <!-- Filled dynamically -->
+        </div>
+    </div>
+    <div class="panel-backdrop" id="panel-backdrop"></div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <!-- Map scripts (self-contained — does NOT need scripts.js) -->
+    <script src="map_hotels.js"></script>
+</body>
+</html>
