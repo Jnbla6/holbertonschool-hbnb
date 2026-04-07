@@ -41,7 +41,6 @@
 
         .amenity-form { display: flex; gap: 0.7rem; margin-bottom: 1rem; align-items: center; }
         .amenity-form input[type="text"] { flex: 1; padding: 0.6rem 0.8rem; border: 1px solid var(--border); border-radius: 8px; font-size: 0.9rem; background: var(--bg); color: var(--text); }
-        .amenity-form .icon-input { width: 3.5rem; text-align: center; font-size: 1.3rem; padding: 0.4rem; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); }
         .amenity-form button { padding: 0.6rem 1.2rem; background: var(--primary, #FF385C); color: #fff; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
 
         .amenity-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
@@ -125,8 +124,8 @@
         <div class="admin-section">
             <h2>🏷 Amenity Management</h2>
             <div class="amenity-form" id="amenity-form">
-                <input type="text" class="icon-input" id="new-amenity-icon" placeholder="🏊" maxlength="2" title="Pick an emoji icon">
-                <input type="text" id="new-amenity-name" placeholder="Add new amenity (e.g. Swimming Pool)">
+                <input type="text" style="flex: 2" id="new-amenity-icon" placeholder="Image URL (e.g. https://.../pool.png)">
+                <input type="text" style="flex: 2" id="new-amenity-name" placeholder="Add new amenity (e.g. Swimming Pool)">
                 <button id="add-amenity-btn">+ Add</button>
             </div>
             <div class="amenity-tags" id="amenity-list">
@@ -143,7 +142,7 @@
         </div>
     </footer>
 
-    <script src="scripts.js"></script>
+    <script type="module" src="js/admin.js"></script>
     <script>
     document.addEventListener('DOMContentLoaded', () => {
         // Check if user is admin
@@ -262,7 +261,11 @@
                 amenities.forEach(am => {
                     const tag = document.createElement('div');
                     tag.className = 'amenity-tag';
-                    tag.innerHTML = `<span style="font-size:1.1rem;">${am.icon || '✓'}</span> <span>${am.name}</span><button class="delete-amenity" data-id="${am.id}" title="Delete">&times;</button>`;
+                    const isUrl = am.icon && (am.icon.startsWith('http') || am.icon.includes('/'));
+                    const iconHtml = isUrl ? 
+                        `<img src="${am.icon}" alt="icon" style="width: 1.2rem; height: 1.2rem; border-radius: 4px; object-fit: cover;">` : 
+                        `<span style="font-size:1.1rem;">${am.icon || '✓'}</span>`;
+                    tag.innerHTML = `${iconHtml} <span>${am.name}</span><button class="delete-amenity" data-id="${am.id}" title="Delete">&times;</button>`;
                     container.appendChild(tag);
                 });
 

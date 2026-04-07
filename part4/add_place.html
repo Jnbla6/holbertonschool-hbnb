@@ -7,6 +7,8 @@
     <title>Add a Place &mdash; HBNB</title>
     <link rel="icon" type="image/png" href="images/icon.png">
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <!-- Inline styles for form layout -->
     <style>
         .place-form-fields {
@@ -93,22 +95,33 @@
                             </div>
                         </div>
 
-                        <div class="place-form-row">
+                        <div class="form-group">
+                            <label>Location (Click on map to pick)</label>
+                            <div id="picker-map" style="height: 300px; width: 100%; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 0.5rem; z-index: 1;"></div>
+                        </div>
+
+                        <div class="place-form-row" style="opacity: 0.7;">
                             <div class="form-group">
                                 <label for="latitude">Latitude</label>
-                                <input type="number" id="latitude" name="latitude" placeholder="37.7749" step="any" required>
+                                <input type="number" id="latitude" name="latitude" placeholder="e.g. 24.7136" step="any" required readonly style="background: var(--bg-hover);">
                             </div>
 
                             <div class="form-group">
                                 <label for="longitude">Longitude</label>
-                                <input type="number" id="longitude" name="longitude" placeholder="-122.4194" step="any" required>
+                                <input type="number" id="longitude" name="longitude" placeholder="e.g. 46.6753" step="any" required readonly style="background: var(--bg-hover);">
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label>Amenities</label>
-                            <div id="amenities-container" style="display: flex; flex-wrap: wrap; gap: 1rem; border: 1px solid var(--border); padding: 1rem; border-radius: 8px;">
-                                <span style="color: var(--text-secondary); font-size: 0.9rem;">Loading amenities...</span>
+                            <div style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                <select id="amenity-select" style="flex: 1; padding: 0.75rem; border-radius: 8px; border: 1px solid var(--border); font-family: inherit; font-size: 0.95rem;">
+                                    <option value="" disabled selected>Select an amenity</option>
+                                </select>
+                                <button type="button" id="add-amenity-btn" style="padding: 0.5rem 1.5rem; border-radius: 8px; background: var(--primary); color: white; border: none; cursor: pointer; font-weight: bold;">Add</button>
+                            </div>
+                            <div id="amenities-container" style="display: flex; flex-wrap: wrap; gap: 0.5rem; border: 1px solid var(--border); padding: 1rem; border-radius: 8px; min-height: 50px; background: var(--bg);">
+                                <span style="color: var(--text-secondary); font-size: 0.9rem;" id="am-empty-state">Loading amenities...</span>
                             </div>
                         </div>
 
@@ -130,6 +143,6 @@
         </div>
     </div>
 
-    <script src="scripts.js"></script>
+    <script type="module" src="js/add_place.js"></script>
 </body>
 </html>
