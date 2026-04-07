@@ -85,4 +85,17 @@ class Place(BaseModel):
     def to_dict(self):
         obj_dict = super().to_dict()
         obj_dict['amenities'] = [{'id': a.id, 'name': a.name, 'icon': a.icon or '✓'} for a in self.amenities]
+        
+        if hasattr(self, 'reviews') and self.reviews:
+            valid_reviews = [r for r in self.reviews if getattr(r, 'rating', None) is not None]
+            if valid_reviews:
+                avg = sum(r.rating for r in valid_reviews) / len(valid_reviews)
+                obj_dict['rating'] = round(avg, 1)
+            else:
+                obj_dict['rating'] = 0
+            obj_dict['reviews'] = len(self.reviews)
+        else:
+            obj_dict['rating'] = 0
+            obj_dict['reviews'] = 0
+            
         return obj_dict
