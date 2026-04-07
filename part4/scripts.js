@@ -1,3 +1,5 @@
+/* global localStorage, alert, fetch, window, document, Intl */
+
 /**
  * HBNB — Main Scripts
  * Handles: theme toggle, place card rendering, filtering, auth state, forms
@@ -20,7 +22,7 @@ const PLACES_DATA = [
     guests: 8,
     bedrooms: 4,
     image: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600&q=80',
-    badge: 'Superhost',
+    badge: 'Superhost'
   },
   {
     id: '2',
@@ -33,7 +35,7 @@ const PLACES_DATA = [
     guests: 4,
     bedrooms: 2,
     image: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=600&q=80',
-    badge: 'Top Rated',
+    badge: 'Top Rated'
   },
   {
     id: '3',
@@ -46,7 +48,7 @@ const PLACES_DATA = [
     guests: 6,
     bedrooms: 3,
     image: 'https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=600&q=80',
-    badge: 'Guest Favourite',
+    badge: 'Guest Favourite'
   },
   {
     id: '4',
@@ -59,7 +61,7 @@ const PLACES_DATA = [
     guests: 10,
     bedrooms: 5,
     image: 'https://images.unsplash.com/photo-1540541338287-41700207dee6?w=600&q=80',
-    badge: 'Popular',
+    badge: 'Popular'
   },
   {
     id: '5',
@@ -72,7 +74,7 @@ const PLACES_DATA = [
     guests: 2,
     bedrooms: 1,
     image: 'https://images.unsplash.com/photo-1523192193543-6e7296d960e4?w=600&q=80',
-    badge: null,
+    badge: null
   },
   {
     id: '6',
@@ -85,61 +87,62 @@ const PLACES_DATA = [
     guests: 6,
     bedrooms: 3,
     image: 'https://images.unsplash.com/photo-1532323544230-7191fd51bc1b?w=600&q=80',
-    badge: 'Rare Find',
-  },
+    badge: 'Rare Find'
+  }
 ];
 
 /* ════════════════════════════════════════════════════════
    UTILITIES
    ════════════════════════════════════════════════════════ */
+const API_URL = 'http://127.0.0.1:8080';
 const $ = (sel, ctx = document) => ctx.querySelector(sel);
 const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
 
-function formatPrice(price) {
+function formatPrice (price) {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
-    maximumFractionDigits: 0,
+    maximumFractionDigits: 0
   }).format(price);
 }
 
-function getCookie(name) {
+function getCookie (name) {
   return document.cookie.split('; ')
     .find(r => r.startsWith(name + '='))
     ?.split('=')[1] || null;
 }
 
-function isLoggedIn() {
-  return getCookie('auth-token') !== null || localStorage.getItem('hbnb-user') !== null;
+function isLoggedIn () {
+  return getCookie('token') !== null || localStorage.getItem('hbnb-user') !== null;
 }
 
 /* ════════════════════════════════════════════════════════
    THEME TOGGLE  (persists via localStorage)
    ════════════════════════════════════════════════════════ */
-function initTheme() {
+function initTheme () {
   const saved = localStorage.getItem('hbnb-theme') || 'light';
   document.documentElement.setAttribute('data-theme', saved);
   updateToggleIcon(saved);
 }
 
-function updateToggleIcon(theme) {
+function updateToggleIcon (theme) {
   const moonIcon = document.getElementById('icon-moon');
-  const sunIcon  = document.getElementById('icon-sun');
+  const sunIcon = document.getElementById('icon-sun');
   const btn = $('#theme-toggle');
   if (!btn) return;
 
   if (theme === 'dark') {
     if (moonIcon) moonIcon.style.display = 'none';
-    if (sunIcon)  sunIcon.style.display  = 'block';
+    if (sunIcon) sunIcon.style.display = 'block';
     btn.setAttribute('aria-label', 'Switch to light mode');
   } else {
     if (moonIcon) moonIcon.style.display = 'block';
-    if (sunIcon)  sunIcon.style.display  = 'none';
+    if (sunIcon) sunIcon.style.display = 'none';
     btn.setAttribute('aria-label', 'Switch to dark mode');
   }
 }
 
-function setupThemeToggle() {
+function setupThemeToggle () {
   const btn = $('#theme-toggle');
   if (!btn) return;
 
@@ -156,12 +159,12 @@ function setupThemeToggle() {
    RENDER PLACE CARDS
    ════════════════════════════════════════════════════════ */
 /* SVG icons as strings for card injection */
-const SVG_STAR = `<svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1" style="vertical-align:-1px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`;
-const SVG_PIN  = `<svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>`;
-const SVG_HEART_EMPTY = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`;
-const SVG_HEART_FULL  = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="#FF385C" stroke="#FF385C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`;
+const SVG_STAR = '<svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1" style="vertical-align:-1px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>';
+const SVG_PIN = '<svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>';
+const SVG_HEART_EMPTY = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>';
+const SVG_HEART_FULL = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="#FF385C" stroke="#FF385C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>';
 
-function createPlaceCard(place) {
+function createPlaceCard (place) {
   const card = document.createElement('article');
   card.className = 'place-card';
   card.dataset.price = place.price;
@@ -214,7 +217,7 @@ function createPlaceCard(place) {
   return card;
 }
 
-function renderPlaces(places) {
+function renderPlaces (places) {
   const list = $('#places-list');
   if (!list) return;
 
@@ -244,7 +247,7 @@ function renderPlaces(places) {
 /* ════════════════════════════════════════════════════════
    FILTER LOGIC
    ════════════════════════════════════════════════════════ */
-function applyFilters() {
+function applyFilters () {
   const maxPrice = ($('#price-filter') || {}).value || 'all';
   const type = ($('#type-filter') || {}).value || 'all';
 
@@ -260,7 +263,7 @@ function applyFilters() {
 /* ════════════════════════════════════════════════════════
    AUTH STATE
    ════════════════════════════════════════════════════════ */
-function updateAuthState() {
+function updateAuthState () {
   const loginLink = $('.login-button') || $('#login-link');
   if (!loginLink) return;
   if (isLoggedIn()) {
@@ -271,11 +274,11 @@ function updateAuthState() {
 /* ════════════════════════════════════════════════════════
    LOGIN FORM
    ════════════════════════════════════════════════════════ */
-function initLoginForm() {
+async function initLoginForm () {
   const form = $('#login-form');
   if (!form) return;
 
-  form.addEventListener('submit', (e) => {
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
     const email = ($('#email') || {}).value?.trim();
     const password = ($('#password') || {}).value;
@@ -285,11 +288,34 @@ function initLoginForm() {
     btn.textContent = 'Signing in…';
     btn.disabled = true;
 
-    setTimeout(() => {
-      localStorage.setItem('hbnb-user', JSON.stringify({ email }));
-      document.cookie = 'auth-token=mock-token; path=/; max-age=86400';
-      window.location.href = 'index.html';
-    }, 900);
+    try {
+      const response = await fetch(`${API_URL}/api/v1/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        // store token in cookie (expires in 1 day)
+        document.cookie = `token=${data.access_token}; path=/; max-age=86400`;
+        // store user info in localStorage for client-side use
+        localStorage.setItem('hbnb-user', JSON.stringify({ email }));
+
+        // redirect to homepage or dashboard
+        window.location.href = 'index.html';
+      } else {
+        const errorData = await response.json();
+        alert('Login failed: ' + (errorData.msg || 'Invalid credentials'));
+        btn.textContent = 'Sign In';
+        btn.disabled = false;
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Could not connect to the server. Check CORS settings.');
+      btn.textContent = 'Sign In';
+      btn.disabled = false;
+    }
   });
 
   // Social login stubs
@@ -303,7 +329,7 @@ function initLoginForm() {
 /* ════════════════════════════════════════════════════════
    REVIEW FORM
    ════════════════════════════════════════════════════════ */
-function initReviewForm() {
+function initReviewForm () {
   // Character counter
   const reviewTextarea = $('#review');
   const counter = $('#char-count');
@@ -314,7 +340,7 @@ function initReviewForm() {
   }
 
   // Star rating label
-  const ratingLabels = { '5': 'Excellent', '4': 'Great', '3': 'Good', '2': 'Fair', '1': 'Poor' };
+  const ratingLabels = { 5: 'Excellent', 4: 'Great', 3: 'Good', 2: 'Fair', 1: 'Poor' };
   const ratingLabelEl = $('#rating-label');
   $$('input[name="rating"]').forEach(input => {
     input.addEventListener('change', () => {
