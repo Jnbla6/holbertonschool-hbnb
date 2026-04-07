@@ -1,4 +1,5 @@
 from flask import Flask, app
+from flask_cors import CORS
 from flask_restx import Api
 from flask_jwt_extended import JWTManager
 from flask_bcrypt import Bcrypt
@@ -12,10 +13,11 @@ db = SQLAlchemy()
 def create_app(config_class="config.DevelopmentConfig"):
     app = Flask(__name__)
     app.config.from_object(config_class)
-    
+
     jwt.init_app(app)
     bcrypt.init_app(app)
     db.init_app(app)
+    CORS(app)
 
     from app.api.v1.amenities import api as amenity_ns
     from app.api.v1.users import api as users_ns
