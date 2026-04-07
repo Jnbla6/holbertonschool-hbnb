@@ -17,7 +17,13 @@ class Place(BaseModel):
     price = Column(Float, nullable=False)
     latitude = Column(Float, nullable=False)
     longitude = Column(Float, nullable=False)
+    max_guests = Column(db.Integer, default=1)
+    number_rooms = Column(db.Integer, default=1)
+    number_bathrooms = Column(db.Integer, default=1)
     owner_id = Column(String(36), ForeignKey('users.id'), nullable=False)
+    image_url = Column(String(255), nullable=True)
+    city = Column(String(100), default='')
+    country = Column(String(100), default='')
     
     reviews = relationship('Review', backref='place', lazy=True, cascade="all, delete-orphan")
     amenities = relationship('Amenity', secondary=place_amenity, backref='place_amenities', lazy='subquery')
@@ -73,8 +79,10 @@ class Place(BaseModel):
         from app.models.amenity import Amenity
         if not isinstance(value, Amenity):
             raise TypeError('Value must be an instance of Amenity')
-        if value.id not in self.amenities:
-            self.amenities.append(value.id)
-            if not hasattr(self, 'amenities_objects'):
-                self.amenities_objects = []
-            self.amenities_objects.append(value)
+        if value not in self.amenities:
+            self.amenities.append(value)
+
+    def to_dict(self):
+        obj_dict = super().to_dict()
+        obj_dict['amenities'] = [{'id': a.id, 'name': a.name, 'icon': a.icon or '✓'} for a in self.amenities]
+        return obj_dict

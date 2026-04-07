@@ -29,7 +29,7 @@ class ReviewList(Resource):
         place = facade.get_place(review_data['place_id'])
         if not place:
             return {'error': 'Place not found.'}, 400
-        if place.owner.id == current_user_id:
+        if place.owner_id == current_user_id:
             return {'error': 'You cannot review your own place.'}, 400
         
         # Check if the user has already reviewed this place
@@ -43,8 +43,8 @@ class ReviewList(Resource):
             'id': result.id, 
             'text': result.text, 
             'rating': result.rating, 
-            'user_id': result.user, 
-            'place_id': result.place
+            'user_id': result.user_id, 
+            'place_id': result.place_id
         }, 201
 
     @api.response(200, 'List of reviews retrieved successfully')
@@ -69,8 +69,8 @@ class ReviewResource(Resource):
                 'id': review.id, 
                 'text': review.text, 
                 'rating': review.rating, 
-                'user_id': review.user, 
-                'place_id': review.place
+                'user_id': review.user_id, 
+                'place_id': review.place_id
             }, 200
         return {'error': 'Review not found'}, 404
 
@@ -90,7 +90,7 @@ class ReviewResource(Resource):
         review = facade.get_review(review_id)
         if not review:
             return {'error': 'Review not found'}, 404
-        if review.user != current_user_id and not get_jwt().get('is_admin', False):
+        if review.user_id != current_user_id and not get_jwt().get('is_admin', False):
             return {'error': 'Unauthorized action.'}, 403
         success, msg = facade.update_review(review_id, review_data)
         if not success:
@@ -110,7 +110,7 @@ class ReviewResource(Resource):
 
         if not review:
             return {'error': 'Review not found'}, 404
-        if review.user != current_user_id and not get_jwt().get('is_admin', False):
+        if review.user_id != current_user_id and not get_jwt().get('is_admin', False):
             return {'error': 'Unauthorized action.'}, 403
 
         success, msg = facade.delete_review(review_id)

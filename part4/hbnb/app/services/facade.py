@@ -159,12 +159,12 @@ class HBnBFacade:
             if not place_obj:
                 return False, "Place not found"
 
-            # 3. Create the Review instance with the retrieved User and Place objects
+            # 3. Create the Review instance with user_id and place_id
             review_params = {
                 "text": review_data.get('text'),
                 "rating": review_data.get('rating'),
-                "user": user_obj,
-                "place": place_obj
+                "user_id": user_id,
+                "place_id": place_id
             }
 
             review = Review(**review_params)
@@ -191,7 +191,7 @@ class HBnBFacade:
             return False
         
         for review in reviews:
-            if review.user.id == user_id:
+            if review.user_id == user_id:
                 return True
         return False
 
@@ -215,10 +215,24 @@ class HBnBFacade:
         review = self.review_repository.get(review_id)
         if not review:
             return False, 'Review Not Found'
-        place = self.place_repository.get(review.place)
+        place = self.place_repository.get(review.place_id)
         if place and hasattr(place, 'reviews'):
             if review in place.reviews:
                 place.reviews.remove(review)
         self.review_repository.delete(review_id)
+        return True, None
+
+    def delete_place(self, place_id):
+        place = self.place_repository.get(place_id)
+        if not place:
+            return False, 'Place Not Found'
+        self.place_repository.delete(place_id)
+        return True, None
+
+    def delete_user(self, user_id):
+        user = self.user_repository.get(user_id)
+        if not user:
+            return False, 'User Not Found'
+        self.user_repository.delete(user_id)
         return True, None
     

@@ -32,7 +32,7 @@ class Login(Resource):
         )
         
         # Step 4: Return the JWT token to the client
-        return {'access_token': access_token}, 200
+        return {'access_token': access_token, 'is_admin': user.is_admin}, 200
 
 
 @api.route('/protected')

@@ -34,7 +34,7 @@ class UserList(Resource):
     def get(self):
         """Retrieve a list of all users"""
         users = facade.get_all_users()
-        return [{'id': user.id, 'first_name': user.first_name, 'last_name': user.last_name, 'email': user.email} for user in users], 200
+        return [{'id': user.id, 'first_name': user.first_name, 'last_name': user.last_name, 'email': user.email, 'is_admin': user.is_admin} for user in users], 200
     
 @api.route('/<user_id>')
 class UserResource(Resource):
@@ -88,3 +88,50 @@ class UserResource(Resource):
             if msg == 'User Not Found':
                 return {'error': msg}, 404
             return {'error': msg}, 400
+
+    @api.response(200, 'User deleted successfully')
+    @api.response(404, 'User not found')
+    @api.response(403, 'Admin privileges required')
+    @jwt_required()
+    def delete(self, user_id):
+        """Delete a user (admin only)"""
+        if not get_jwt().get('is_admin', False):
+            return {'error': 'Admin privileges required'}, 403
+        
+        if user_id == get_jwt_identity():
+            return {'error': 'Cannot delete yourself'}, 400
+        
+        user = facade.get_user(user_id)
+        if not user:
+            return {'error': 'User not found'}, 404
+        
+        success, msg = facade.delete_user(user_id)
+        if success:
+            return {'message': 'User deleted successfully'}, 200
+        return {'error': msg}, 400
+
+@api.route('/<user_id>/toggle-admin')
+class UserToggleAdmin(Resource):
+    @api.response(200, 'User admin status toggled')
+    @api.response(404, 'User not found')
+    @api.response(403, 'Admin privileges required')
+    @jwt_required()
+    def put(self, user_id):
+        """Toggle admin status for a user (admin only)"""
+        if not get_jwt().get('is_admin', False):
+            return {'error': 'Admin privileges required'}, 403
+
+        user = facade.get_user(user_id)
+        if not user:
+            return {'error': 'User not found'}, 404
+
+        new_status = not user.is_admin
+        facade.update_user(user_id, {'is_admin': new_status})
+        updated = facade.get_user(user_id)
+        return {
+            'id': updated.id,
+            'first_name': updated.first_name,
+            'last_name': updated.last_name,
+            'email': updated.email,
+            'is_admin': updated.is_admin
+        }, 200
