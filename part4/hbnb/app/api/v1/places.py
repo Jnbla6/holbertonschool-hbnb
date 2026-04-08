@@ -51,6 +51,8 @@ class PlaceList(Resource):
     @jwt_required()
     def post(self):
         """Register a new place"""
+        image_file = None
+
         if request.content_type and request.content_type.startswith('multipart/form-data'):
             place_data = {
                 'title': request.form.get('title'),
@@ -69,7 +71,8 @@ class PlaceList(Resource):
             amenities = request.form.getlist('amenities')
             if amenities:
                 place_data['amenities'] = amenities
-            
+            image_file = request.files.get('image_file')
+            """
             file = request.files.get('image_file')
             if file and file.filename:
                 filename = secure_filename(file.filename)
@@ -80,10 +83,11 @@ class PlaceList(Resource):
                 os.makedirs(save_dir, exist_ok=True)
                 file.save(os.path.join(save_dir, unique_filename))
                 place_data['image_url'] = f"images/{unique_filename}"
+            """
         else:
             place_data = api.payload
             place_data['owner_id'] = get_jwt_identity()
-        success, result = facade.create_place(place_data)
+        success, result = facade.create_place(place_data, image_file=image_file)
         if not success:
             return {'error': result}, 400
         return result.to_dict(), 201
