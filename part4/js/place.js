@@ -59,26 +59,63 @@ document.addEventListener('DOMContentLoaded', async () => {
     const bookPriceEl = document.getElementById('detail-booking-price');
     if (bookPriceEl) bookPriceEl.innerHTML = `$${place.price} <span>/ night</span>`;
     
-    const nights = 7;
-    const baseTotal = place.price * nights;
-    const cleaningFee = Math.round(baseTotal * 0.08);
-    const serviceFee = Math.round(baseTotal * 0.12);
-    const finalTotal = baseTotal + cleaningFee + serviceFee;
+    function updatePriceCalc(nights) {
+      if (nights <= 0) nights = 1;
+      const baseTotal = place.price * nights;
+      const cleaningFee = Math.round(baseTotal * 0.08);
+      const serviceFee = Math.round(baseTotal * 0.12);
+      const finalTotal = baseTotal + cleaningFee + serviceFee;
+  
+      const calcBaseLabel = document.getElementById('detail-calc-base-label');
+      if (calcBaseLabel) calcBaseLabel.innerHTML = `$${place.price} &times; ${nights} night${nights > 1 ? 's' : ''}`;
+      
+      const calcBaseVal = document.getElementById('detail-calc-base-val');
+      if (calcBaseVal) calcBaseVal.textContent = `$${baseTotal}`;
+      
+      const calcClean = document.getElementById('detail-calc-cleaning');
+      if (calcClean) calcClean.textContent = `$${cleaningFee}`;
+      
+      const calcService = document.getElementById('detail-calc-service');
+      if (calcService) calcService.textContent = `$${serviceFee}`;
+      
+      const calcTotal = document.getElementById('detail-calc-total');
+      if (calcTotal) calcTotal.textContent = `$${finalTotal}`;
+    }
 
-    const calcBaseLabel = document.getElementById('detail-calc-base-label');
-    if (calcBaseLabel) calcBaseLabel.innerHTML = `$${place.price} &times; ${nights} nights`;
-    
-    const calcBaseVal = document.getElementById('detail-calc-base-val');
-    if (calcBaseVal) calcBaseVal.textContent = `$${baseTotal}`;
-    
-    const calcClean = document.getElementById('detail-calc-cleaning');
-    if (calcClean) calcClean.textContent = `$${cleaningFee}`;
-    
-    const calcService = document.getElementById('detail-calc-service');
-    if (calcService) calcService.textContent = `$${serviceFee}`;
-    
-    const calcTotal = document.getElementById('detail-calc-total');
-    if (calcTotal) calcTotal.textContent = `$${finalTotal}`;
+    // Default to 1 night if no dates selected.
+    updatePriceCalc(1);
+
+    const checkinInput = document.getElementById('checkin-date');
+    const checkoutInput = document.getElementById('checkout-date');
+
+    // Add min date attributes
+    const today = new Date().toISOString().split('T')[0];
+    if (checkinInput) {
+      checkinInput.setAttribute('min', today);
+      checkinInput.addEventListener('change', () => {
+        if (checkoutInput) checkoutInput.setAttribute('min', checkinInput.value);
+        handleDateChange();
+      });
+    }
+
+    function handleDateChange() {
+      if (checkinInput && checkoutInput && checkinInput.value && checkoutInput.value) {
+        const date1 = new Date(checkinInput.value);
+        const date2 = new Date(checkoutInput.value);
+        const diffTime = date2 - date1;
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        
+        if (diffDays > 0) {
+          updatePriceCalc(diffDays);
+        } else {
+          updatePriceCalc(1);
+        }
+      } else {
+        updatePriceCalc(1);
+      }
+    }
+
+    if (checkoutInput) checkoutInput.addEventListener('change', handleDateChange);
 
     const guestBook = document.getElementById('detail-guests-booking');
     if (guestBook) guestBook.textContent = `Up to ${place.max_guests || 1}`;
@@ -202,86 +239,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     
     await loadReviews();
-
-    const reviewForm = document.getElementById('review-form');
-    const addReviewSection = document.getElementById('add-review');
     
-    if (!isLoggedIn() && addReviewSection) {
-      addReviewSection.innerHTML = '<p style="text-align:center; color:var(--text-secondary); padding:1rem;"><a href="login.html" style="color:var(--primary, #FF385C); font-weight:600;">Log in</a> to leave a review.</p>';
-    }
-    
-    if (reviewForm) {
-      const reviewTextarea = document.getElementById('review-text');
-      const counter = document.getElementById('char-count');
-      if (reviewTextarea && counter) {
-        reviewTextarea.addEventListener('input', () => {
-          counter.textContent = reviewTextarea.value.length;
-        });
+    const bookNowBtn = document.getElementById('book-now-btn');
+    if (bookNowBtn) {
+      if (!isLoggedIn()) {
+        bookNowBtn.href = 'login.html';
+        bookNowBtn.textContent = 'Log in to Reserve';
+      } else {
+        bookNowBtn.href = `add_review.html?id=${placeId}`;
       }
-
-      const ratingLabels = { '5': 'Excellent', '4': 'Great', '3': 'Good', '2': 'Fair', '1': 'Poor' };
-      const ratingLabelEl = document.getElementById('rating-label');
-      document.querySelectorAll('input[name="rating"]').forEach(input => {
-        input.addEventListener('change', () => {
-          if (ratingLabelEl) ratingLabelEl.textContent = ratingLabels[input.value] || '';
-        });
-      });
-
-      reviewForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const rating = reviewForm.querySelector('input[name="rating"]:checked');
-        const text = reviewTextarea?.value?.trim();
-        
-        if (!rating || !text) {
-          alert('Please select a rating and write your review.');
-          return;
-        }
-        
-        const btn = document.getElementById('submit-review-btn');
-        const originalText = btn.textContent;
-        btn.textContent = 'Submitting…';
-        btn.disabled = true;
-        
-        try {
-          const res = await fetch('http://127.0.0.1:8080/api/v1/reviews/', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${getCookie('token')}`
-            },
-            body: JSON.stringify({
-              text: text,
-              rating: parseInt(rating.value),
-              place_id: placeId
-            })
-          });
-          
-          if (res.ok) {
-            reviewForm.reset();
-            if (counter) counter.textContent = '0';
-            if (ratingLabelEl) ratingLabelEl.textContent = '';
-            
-            btn.textContent = '✓ Review submitted!';
-            btn.style.background = '#008a80';
-            await loadReviews();
-            setTimeout(() => {
-              btn.textContent = originalText;
-              btn.style.background = '';
-              btn.disabled = false;
-            }, 2000);
-          } else {
-            const err = await res.json();
-            alert(err.error || 'Failed to submit review');
-            btn.textContent = originalText;
-            btn.disabled = false;
-          }
-        } catch (err) {
-          alert('Network error');
-          btn.textContent = originalText;
-          btn.disabled = false;
-        }
-      });
     }
+
 
   } catch (error) {
     console.error('Error fetching place details:', error);
