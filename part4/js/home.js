@@ -120,8 +120,8 @@ function displayPlaces(places) {
       rating: place.rating || 'New',
       reviews: place.reviews || 0,
       type: place.type || 'place',
-      guests: place.guests || 2,
-      bedrooms: place.bedrooms || 1,
+      guests: place.max_guests || place.guests || 1,
+      bedrooms: place.number_rooms || place.bedrooms || 1,
       image: place.image_url || 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=600&q=80',
       badge: place.badge || null
     };
