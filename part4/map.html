@@ -57,6 +57,19 @@
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
                     Back to listings
                 </a>
+                <a href="login.html" class="login-button" id="login-link">Login</a>
+                <a href="add_place.html" class="login-button" id="add-place-link" style="display: none; margin-right: 0.5rem;">Add a Place</a>
+                <div class="account-menu" id="account-menu" style="display: none; position: relative; margin-left: 0.5rem;">
+                    <button class="account-btn" id="account-btn" aria-label="Account menu" style="background:none; border:none; cursor:pointer; color: var(--text);">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    </button>
+                    <div class="account-dropdown" id="account-dropdown" style="display: none; position: absolute; right: 0; top: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); padding: 0.5rem 0; min-width: 150px; z-index: 100; margin-top: 0.5rem;">
+                        <a href="#" id="become-owner-link" style="display: block; padding: 0.5rem 1.2rem; color: var(--text); text-decoration: none; font-size: 0.95rem; font-weight: 500; transition: background 0.2s;" onmouseover="this.style.background='var(--bg-hover)'" onmouseout="this.style.background='transparent'">Become Owner</a>
+                        <a href="#" id="switch-traveler-link" style="display: none; padding: 0.5rem 1.2rem; color: var(--text); text-decoration: none; font-size: 0.95rem; font-weight: 500; transition: background 0.2s;" onmouseover="this.style.background='var(--bg-hover)'" onmouseout="this.style.background='transparent'">Switch to Traveler</a>
+                        <a href="admin.html" id="admin-link" style="display: none; padding: 0.5rem 1.2rem; color: #FF385C; text-decoration: none; font-size: 0.95rem; font-weight: 600; transition: background 0.2s;" onmouseover="this.style.background='var(--bg-hover)'" onmouseout="this.style.background='transparent'">⚙ Admin Dashboard</a>
+                        <a href="#" id="logout-link" style="display: block; padding: 0.5rem 1.2rem; color: var(--text); text-decoration: none; font-size: 0.95rem; font-weight: 500; transition: background 0.2s;" onmouseover="this.style.background='var(--bg-hover)'" onmouseout="this.style.background='transparent'">Log out</a>
+                    </div>
+                </div>
             </nav>
         </div>
     </header>
@@ -145,5 +158,10 @@
 
     <!-- Map scripts (self-contained — does NOT need scripts.js) -->
     <script src="js/map_hotels.js"></script>
+    <script type="module">
+      import { checkAuthentication, initAccountMenu } from './js/auth.js';
+      checkAuthentication();
+      initAccountMenu();
+    </script>
 </body>
 </html>
