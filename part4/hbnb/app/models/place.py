@@ -99,3 +99,25 @@ class Place(BaseModel):
             obj_dict['reviews'] = 0
             
         return obj_dict
+    
+    @validates('price_by_night', 'number_of_rooms', 'number_of_bathrooms', 'max_guests')
+    def validate_integers(self, key, value):
+        """
+        Validates that the given value is a non-negative integer and within reasonable limits.
+        """
+        if value is None:
+            return value
+        
+        try:
+            val = int(value)
+        except ValueError:
+            raise ValueError(f"{key} must be a valid integer.")
+        
+        if val < 0:
+            raise ValueError(f"{key} cannot be negative.")
+            
+        limit = 100000 if key == 'price_by_night' else 1000
+        if val > limit:
+            raise ValueError(f"{key} exceeds the maximum allowed limit of {limit}.")
+            
+        return val

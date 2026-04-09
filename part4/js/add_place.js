@@ -143,8 +143,9 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       const response = await fetch('http://127.0.0.1:8080/api/v1/places/', {
         method: 'POST',
+        credentials: 'include', 
         headers: { 
-            'Authorization': `Bearer ${getCookie('token')}`
+            'X-CSRF-TOKEN': getCookie('csrf_access_token') 
         },
         body: formData
       });
@@ -157,7 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if (response.status === 401) {
             alert('Your session has expired or is invalid. Please log in again.');
-            document.cookie = 'token=; Max-Age=0; path=/';
+            localStorage.removeItem('is_logged_in');
             window.location.href = 'login.html';
             return;
         }

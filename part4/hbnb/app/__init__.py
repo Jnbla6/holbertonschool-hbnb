@@ -12,8 +12,13 @@ db = SQLAlchemy()
 
 def create_app(config_class="config.DevelopmentConfig"):
     app = Flask(__name__)
-    CORS(app)
+    CORS(app, resources={r"/api/v1/*": {"origins": "http://127.0.0.1:5500"}}, supports_credentials=True)
     app.config.from_object(config_class)
+
+    # JWT configuration to allow tokens in cookies and disable CSRF for simplicity (not recommended for production)
+    app.config['JWT_TOKEN_LOCATION'] = ['cookies']
+    app.config['JWT_COOKIE_SECURE'] = False 
+    app.config['JWT_COOKIE_CSRF_PROTECT'] = True
     
     jwt.init_app(app)
     bcrypt.init_app(app)

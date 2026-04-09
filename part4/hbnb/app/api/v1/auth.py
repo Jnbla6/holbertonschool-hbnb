@@ -1,7 +1,14 @@
+from flask import jsonify, make_response
 from flask_restx import Namespace, Resource, fields
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import (
+    create_access_token, 
+    set_access_cookies, 
+    unset_jwt_cookies,
+    jwt_required, 
+    get_jwt_identity,
+    get_jwt
+)
 from app.services import facade
-from flask_jwt_extended import jwt_required, get_jwt_identity
 
 api = Namespace('auth', description='Authentication operations')
 
@@ -31,9 +38,40 @@ class Login(Resource):
         additional_claims={"is_admin": user.is_admin}  # extra info here
         )
         
-        # Step 4: Return the JWT token to the client
-        return {'access_token': access_token, 'is_admin': user.is_admin}, 200
+        # Step 4: Set the JWT token in a cookie and return a response
+        response = make_response({
+            'message': 'Login successful', 
+            'user': {
+                'id': user.id,
+                'first_name': user.first_name,
+                'is_admin': user.is_admin
+            }
+        })
+        
+        set_access_cookies(response, access_token)
+        
+        return response
 
+@api.route('/me')
+class CurrentUser(Resource):
+    @jwt_required()
+    def get(self):
+        """Verify session and return current user info"""
+        user_id = get_jwt_identity()
+        claims = get_jwt()
+        
+        return {
+            'user_id': user_id,
+            'is_admin': claims.get('is_admin', False)
+        }, 200
+
+@api.route('/logout')
+class Logout(Resource):
+    def post(self):
+        """Clear the secure cookies to log the user out"""
+        response = jsonify({'message': 'Logged out successfully'})
+        unset_jwt_cookies(response)
+        return response
 
 @api.route('/protected')
 class ProtectedResource(Resource):

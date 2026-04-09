@@ -1,18 +1,36 @@
 import { getCookie } from './utils.js';
 
-export function isLoggedIn() {
-  return getCookie('token') !== null;
+const API = 'http://127.0.0.1:8080/api/v1';
+
+export function getCsrfToken() {
+  return getCookie('csrf_access_token');
 }
 
-export function checkAuthentication(onAuthSuccess) {
-  const token = getCookie('token');
+export async function verifySession() {
+  try {
+    const response = await fetch(`${API}/auth/me`, {
+      method: 'GET',
+      credentials: 'include'
+    });
+    if (response.ok) {
+      return await response.json();
+    }
+    return null;
+  } catch (e) {
+    return null;
+  }
+}
+
+export async function checkAuthentication(onAuthSuccess) {
+  const sessionData = await verifySession();
+
   const loginLink = document.getElementById('login-link');
   const accountMenu = document.getElementById('account-menu');
   const addPlaceLink = document.getElementById('add-place-link');
 
   const isOwner = localStorage.getItem('is_owner') === 'true';
 
-  if (!token) {
+  if (!sessionData) {
     if (loginLink) loginLink.style.display = 'block';
     if (accountMenu) accountMenu.style.display = 'none';
     if (addPlaceLink) addPlaceLink.style.display = 'none';
@@ -27,13 +45,13 @@ export function checkAuthentication(onAuthSuccess) {
     }
 
     const adminLink = document.getElementById('admin-link');
-    const isAdmin = localStorage.getItem('is_admin') === 'true';
+    const isAdmin = sessionData.is_admin === true;
     if (adminLink) {
       adminLink.style.display = isAdmin ? 'block' : 'none';
     }
   }
   
-  if (onAuthSuccess) onAuthSuccess(token);
+  if (onAuthSuccess && sessionData) onAuthSuccess(sessionData);
 }
 
 export function initAccountMenu() {
@@ -82,9 +100,21 @@ export function initAccountMenu() {
   }
 
   if (logoutLink) {
-    logoutLink.addEventListener('click', (e) => {
+    logoutLink.addEventListener('click', async (e) => {
       e.preventDefault();
-      document.cookie = 'token=; Max-Age=0; path=/';
+      
+      try {
+        await fetch(`${API}/auth/logout`, {
+          method: 'POST',
+          credentials: 'include',
+          headers: {
+            'X-CSRF-TOKEN': getCsrfToken()
+          }
+        });
+      } catch (err) {
+        console.error('Logout failed', err);
+      }
+      
       localStorage.removeItem('is_admin');
       localStorage.removeItem('is_owner');
       window.location.reload();

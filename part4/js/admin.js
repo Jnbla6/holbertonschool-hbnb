@@ -1,9 +1,10 @@
-/* global localStorage, alert, confirm, atob, fetch, document, window, FormData */
+/* global localStorage, alert, confirm, fetch, document, window, FormData */
 
+import { verifySession, getCsrfToken } from './auth.js';
 import { initTheme, setupThemeToggle } from './theme.js';
 import { checkAuthentication, initAccountMenu } from './auth.js';
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
   // 1. init theme and auth
   initTheme();
   setupThemeToggle();
@@ -11,22 +12,17 @@ document.addEventListener('DOMContentLoaded', () => {
   initAccountMenu();
 
   // 2. check admin privileges
-  if (localStorage.getItem('is_admin') !== 'true') {
-    alert('Access denied. Admin privileges required.');
-    window.location.href = 'index.html';
-    return;
-  }
-
-  const token = document.cookie.split('; ').find(r => r.startsWith('token='))?.split('=')[1];
-  if (!token) {
-    window.location.href = 'login.html';
-    return;
+  const sessionData = await verifySession();
+  if (!sessionData || !sessionData.is_admin) {
+      alert('Access denied. Admin privileges required.');
+      window.location.href = 'index.html';
+      return;
   }
 
   const API = 'http://127.0.0.1:8080/api/v1';
 
   // 3. set up headers
-  const headers = { Authorization: `Bearer ${token}` };
+  const headers = { 'X-CSRF-TOKEN': getCsrfToken() };
 
   // ======= LOAD STATS =======
   async function loadStats () {
@@ -46,11 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ======= LOAD USERS =======
   async function loadUsers () {
-    let currentUserId = null;
-    try {
-      const payloadBase64 = token.split('.')[1];
-      currentUserId = JSON.parse(atob(payloadBase64)).sub;
-    } catch (e) {}
+    const currentUserId = sessionData ? sessionData.user_id : null;
 
     try {
       const res = await fetch(`${API}/users/`);
@@ -61,7 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
       users.forEach(user => {
         const tr = document.createElement('tr');
         const isAdmin = user.is_admin;
-        const isSelf = user.id === currentUserId;
+        const isSelf = String(user.id) === String(currentUserId);
         tr.innerHTML = `
                     <td><strong>${user.first_name} ${user.last_name}</strong>${isSelf ? ' <span style="font-size:0.72rem; color:var(--primary); font-weight:600;">(You)</span>' : ''}</td>
                     <td>${user.email}</td>
@@ -85,6 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
           const userId = btn.dataset.toggleId;
           const res = await fetch(`${API}/users/${userId}/toggle-admin`, {
             method: 'PUT',
+            credentials: 'include',
             headers: { ...headers, 'Content-Type': 'application/json' }
           });
           if (res.ok) { loadUsers(); loadStats(); } else { alert((await res.json()).error || 'Failed'); }
@@ -96,7 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.addEventListener('click', async () => {
           const name = btn.dataset.name;
           if (!confirm(`Delete user "${name}"? All their places and reviews will also be removed.`)) return;
-          const res = await fetch(`${API}/users/${btn.dataset.deleteId}`, { method: 'DELETE', headers });
+          const res = await fetch(`${API}/users/${btn.dataset.deleteId}`, { method: 'DELETE', credentials: 'include', headers });
           if (res.ok) { loadUsers(); loadStats(); } else { alert((await res.json()).error || 'Failed to delete user'); }
         });
       });
@@ -132,7 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
       container.querySelectorAll('.delete-amenity').forEach(btn => {
         btn.addEventListener('click', async () => {
           if (!confirm('Delete this amenity?')) return;
-          const res = await fetch(`${API}/amenities/${btn.dataset.id}`, { method: 'DELETE', headers });
+          const res = await fetch(`${API}/amenities/${btn.dataset.id}`, { method: 'DELETE', credentials: 'include', headers });
           if (res.ok) { loadAmenities(); loadStats(); } else { alert('Failed to delete amenity'); }
         });
       });
@@ -161,6 +154,7 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       const res = await fetch(`${API}/amenities/`, {
         method: 'POST',
+        credentials: 'include',
         headers,
         body: formData
       });
