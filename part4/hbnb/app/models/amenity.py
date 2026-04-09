@@ -7,7 +7,7 @@ from app.models.basemodel import BaseModel
 class Amenity(BaseModel):
     __tablename__ = 'amenities'
     name = Column(String(50), nullable=False)
-    icon = Column(String(255), default='✓')
+    icon = Column(String(255), default='images/amenities/default_icon.webp')
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
     

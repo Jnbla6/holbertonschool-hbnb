@@ -53,8 +53,15 @@ class HBnBFacade:
             return False, str(e)
 
     # Amenity Methods
-    def create_amenity(self, amenity_data):
+    def create_amenity(self, amenity_data, image_file=None):
         try:
+            if image_file:
+                try:
+                    relative_path = ImageService.process_and_save(image_file, folder_name="amenities", keep_alpha=True)
+                    amenity_data['icon'] = relative_path
+                except ValueError as e:
+                    return False, f"Icon processing failed: {str(e)}"
+
             amenity = Amenity(**amenity_data)
             self.amenity_repository.add(amenity)
             return True, amenity
@@ -81,6 +88,20 @@ class HBnBFacade:
             return True, None
         except (ValueError, TypeError) as e:
             return False, str(e)
+        
+    def delete_amenity(self, amenity_id):
+        amenity = self.amenity_repository.get(amenity_id)
+        if not amenity:
+            return False, 'Amenity Not Found'
+
+        icon_relative_path = getattr(amenity, 'icon', None)
+
+        self.amenity_repository.delete(amenity_id)
+
+        if icon_relative_path and icon_relative_path != 'images/amenities/default_icon.webp':
+            ImageService.delete_image(icon_relative_path)
+
+        return True, None
     
     # Place Methods
     def create_place(self, place_data, image_file=None):
@@ -93,15 +114,9 @@ class HBnBFacade:
             place_data['owner_id'] = owner_obj.id
 
             if image_file:
-                # يفضل تحديد المسار الأساسي للمشروع بطريقة ديناميكية
-                # os.getcwd() يعطي مسار تشغيل التطبيق (الجذر)
-                base_dir = os.getcwd() 
-                save_dir = os.path.join(base_dir, 'images')
-                os.makedirs(save_dir, exist_ok=True)
-                
                 try:
-                    filename = ImageService.process_and_save(image_file, save_dir)
-                    place_data['image_url'] = f"images/{filename}"
+                    relative_path = ImageService.process_and_save(image_file, folder_name="places", keep_alpha=False)
+                    place_data['image_url'] = relative_path
                 except ValueError as e:
                     return False, f"Image processing failed: {str(e)}"
 
