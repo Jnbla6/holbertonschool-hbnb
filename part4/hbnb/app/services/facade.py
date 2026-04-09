@@ -1,3 +1,5 @@
+import os
+
 from app.persistence.repository import SQLAlchemyRepository
 from app.models.amenity import Amenity
 from app.models.place import Place
@@ -7,7 +9,7 @@ from app.services.repositories.user_repository import UserRepository
 from app.services.repositories.review_repository import ReviewRepository
 from app.services.repositories.amenity_repository import AmenityRepository
 from app.services.repositories.place_repository import PlaceRepository
-
+from app.services.image_service import ImageService
 
     
 
@@ -51,8 +53,15 @@ class HBnBFacade:
             return False, str(e)
 
     # Amenity Methods
-    def create_amenity(self, amenity_data):
+    def create_amenity(self, amenity_data, image_file=None):
         try:
+            if image_file:
+                try:
+                    relative_path = ImageService.process_and_save(image_file, folder_name="amenities", keep_alpha=True)
+                    amenity_data['icon'] = relative_path
+                except ValueError as e:
+                    return False, f"Icon processing failed: {str(e)}"
+
             amenity = Amenity(**amenity_data)
             self.amenity_repository.add(amenity)
             return True, amenity
@@ -79,9 +88,23 @@ class HBnBFacade:
             return True, None
         except (ValueError, TypeError) as e:
             return False, str(e)
+        
+    def delete_amenity(self, amenity_id):
+        amenity = self.amenity_repository.get(amenity_id)
+        if not amenity:
+            return False, 'Amenity Not Found'
+
+        icon_relative_path = getattr(amenity, 'icon', None)
+
+        self.amenity_repository.delete(amenity_id)
+
+        if icon_relative_path and icon_relative_path != 'images/amenities/default_icon.webp':
+            ImageService.delete_image(icon_relative_path)
+
+        return True, None
     
     # Place Methods
-    def create_place(self, place_data):
+    def create_place(self, place_data, image_file=None):
         try:
             amenity_ids = place_data.pop('amenities', [])
             owner_id = place_data.pop('owner_id', None)
@@ -89,6 +112,14 @@ class HBnBFacade:
             if not owner_obj:
                 return False, "Owner not found. A valid User instance is required."
             place_data['owner_id'] = owner_obj.id
+
+            if image_file:
+                try:
+                    relative_path = ImageService.process_and_save(image_file, folder_name="places", keep_alpha=False)
+                    place_data['image_url'] = relative_path
+                except ValueError as e:
+                    return False, f"Image processing failed: {str(e)}"
+
             place = Place(**place_data)
             for amenity_id in amenity_ids:
                 amenity = self.amenity_repository.get(amenity_id)
@@ -119,11 +150,7 @@ class HBnBFacade:
                 if not new_owner:
                     return False, "New owner not found"
 
-                old_owner = place.owner
-                if place.id in old_owner.places:
-                    old_owner.places.remove(place.id)
-                new_owner.add_place(place)
-                place.owner = new_owner
+                place.owner_id = new_owner.id
 
             amenity_ids = place_data.pop('amenities', None)
             
@@ -141,6 +168,20 @@ class HBnBFacade:
             return True, None
         except (ValueError, TypeError) as e:
             return False, str(e)
+        
+    def delete_place(self, place_id):
+        place = self.place_repository.get(place_id)
+        if not place:
+            return False, 'Place Not Found'
+        
+        image_relative_path = getattr(place, 'image_url', None)
+
+        self.place_repository.delete(place_id)
+
+        if image_relative_path:
+            ImageService.delete_image(image_relative_path)
+
+        return True, None
 
 
     # review methods
@@ -159,12 +200,12 @@ class HBnBFacade:
             if not place_obj:
                 return False, "Place not found"
 
-            # 3. Create the Review instance with the retrieved User and Place objects
+            # 3. Create the Review instance with user_id and place_id
             review_params = {
                 "text": review_data.get('text'),
                 "rating": review_data.get('rating'),
-                "user": user_obj,
-                "place": place_obj
+                "user_id": user_id,
+                "place_id": place_id
             }
 
             review = Review(**review_params)
@@ -191,7 +232,7 @@ class HBnBFacade:
             return False
         
         for review in reviews:
-            if review.user.id == user_id:
+            if review.user_id == user_id:
                 return True
         return False
 
@@ -215,10 +256,17 @@ class HBnBFacade:
         review = self.review_repository.get(review_id)
         if not review:
             return False, 'Review Not Found'
-        place = self.place_repository.get(review.place)
+        place = self.place_repository.get(review.place_id)
         if place and hasattr(place, 'reviews'):
             if review in place.reviews:
                 place.reviews.remove(review)
         self.review_repository.delete(review_id)
+        return True, None
+
+    def delete_user(self, user_id):
+        user = self.user_repository.get(user_id)
+        if not user:
+            return False, 'User Not Found'
+        self.user_repository.delete(user_id)
         return True, None
     

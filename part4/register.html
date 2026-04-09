@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Sign in to HBNB to access exclusive deals, manage your bookings, and write reviews.">
-    <title>Login &mdash; HBNB</title>
+    <meta name="description" content="Sign up for HBNB to access exclusive deals, manage your bookings, and write reviews.">
+    <title>Sign Up &mdash; HBNB</title>
     <link rel="icon" type="image/png" href="images/icon.png">
     <link rel="stylesheet" href="styles.css">
 </head>
@@ -39,7 +39,7 @@
         </div>
     </header>
 
-    <!-- ===== LOGIN ===== -->
+    <!-- ===== REGISTER ===== -->
     <div class="login-page">
         <div class="login-container">
             <div class="login-logo-wrap">
@@ -47,11 +47,33 @@
             </div>
 
             <div class="login-card">
-                <form id="login-form" novalidate>
-                    <h2>Welcome back</h2>
-                    <p class="login-subtitle">Sign in to continue your adventure</p>
+                <form id="register-form" novalidate>
+                    <h2>Create an account</h2>
+                    <p class="login-subtitle">Join HBNB to start your adventure</p>
 
                     <div class="login-form-fields">
+                        <div class="form-group">
+                            <label for="first_name">First Name</label>
+                            <input
+                                type="text"
+                                id="first_name"
+                                name="first_name"
+                                placeholder="John"
+                                required
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label for="last_name">Last Name</label>
+                            <input
+                                type="text"
+                                id="last_name"
+                                name="last_name"
+                                placeholder="Doe"
+                                required
+                            >
+                        </div>
+
                         <div class="form-group">
                             <label for="email">Email address</label>
                             <input
@@ -70,27 +92,26 @@
                                 type="password"
                                 id="password"
                                 name="password"
-                                placeholder="Enter your password"
+                                placeholder="Create a password"
                                 required
-                                autocomplete="current-password"
+                                autocomplete="new-password"
                             >
                         </div>
 
-                        <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <label style="display:flex; align-items:center; gap:0.4rem; font-size:0.82rem; cursor:pointer;">
-                                <input
-                                    type="checkbox"
-                                    id="remember-me"
-                                    name="remember"
-                                    style="width:auto; padding:0; background:none; border:1px solid var(--border); border-radius:3px; accent-color:var(--primary);"
-                                >
-                                Remember me
-                            </label>
-                            <a href="#" style="font-size:0.82rem; color:var(--primary); font-weight:600; text-decoration:underline; text-underline-offset:2px;">Forgot password?</a>
+                        <div class="form-group">
+                            <label for="confirm_password">Confirm Password</label>
+                            <input
+                                type="password"
+                                id="confirm_password"
+                                name="confirm_password"
+                                placeholder="Confirm your password"
+                                required
+                                autocomplete="new-password"
+                            >
                         </div>
 
-                        <button type="submit" class="submit-btn" id="login-submit-btn" style="width:100%; padding:0.9rem; font-size:0.95rem; border-radius:8px; margin-top:0.25rem;">
-                            Sign in
+                        <button type="submit" class="submit-btn" id="register-submit-btn" style="width:100%; padding:0.9rem; font-size:0.95rem; border-radius:8px; margin-top:0.25rem;">
+                            Sign up
                         </button>
                     </div>
 
@@ -110,11 +131,11 @@
             </div>
 
             <p class="login-footer">
-                Don't have an account? <a href="register.html">Sign up free</a>
+                Already have an account? <a href="login.html">Sign in</a>
             </p>
         </div>
     </div>
 
-    <script type="module" src="js/login.js"></script>
+    <script type="module" src="js/register.js"></script>
 </body>
 </html>

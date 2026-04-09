@@ -17,128 +17,33 @@
    ═══════════════════════════════════════════════════════════════ */
 const HotelData = (() => {
 
-  const HOTELS = [
-    {
-      id: 1,
-      name: 'Al Faisaliah Hotel',
-      location: 'King Fahd Rd, Riyadh',
-      lat: 24.6877, lng: 46.6863,
-      rating: 4.9, reviews: 2340,
-      pricePerNight: 780, priceTier: 'luxury',
-      description: 'Iconic 267-metre tower offering panoramic Riyadh views, a sky-high restaurant inside a glass globe, and lavish five-star amenities.',
-      image: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=600&q=80',
-      amenities: ['Pool', 'Spa', 'Gym', 'Restaurant', 'Bar', 'Concierge'],
-      category: 'Luxury Hotel',
-    },
-    {
-      id: 2,
-      name: 'Four Seasons Riyadh',
-      location: 'Kingdom Centre, Riyadh',
-      lat: 24.7136, lng: 46.6753,
-      rating: 4.8, reviews: 1895,
-      pricePerNight: 950, priceTier: 'luxury',
-      description: 'Occupying the top 30 floors of the Kingdom Centre, this is the pinnacle of Arabian luxury offering butler service and sky-high views.',
-      image: 'https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=600&q=80',
-      amenities: ['Pool', 'Spa', 'Gym', 'Butler service', 'Restaurant', 'Bar'],
-      category: 'Luxury Resort',
-    },
-    {
-      id: 3,
-      name: 'Hyatt Regency Riyadh',
-      location: 'Olaya District, Riyadh',
-      lat: 24.7268, lng: 46.6344,
-      rating: 4.5, reviews: 987,
-      pricePerNight: 450, priceTier: 'luxury',
-      description: 'Contemporary five-star hotel in the upscale Olaya business district, featuring spacious rooms, a full-service spa, and multiple dining outlets.',
-      image: 'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=600&q=80',
-      amenities: ['Pool', 'Spa', 'Gym', 'Restaurant', 'Business center'],
-      category: 'Business Hotel',
-    },
-    {
-      id: 4,
-      name: 'Novotel Riyadh Al Anoud',
-      location: 'Al Anoud, Riyadh',
-      lat: 24.6961, lng: 46.7219,
-      rating: 4.2, reviews: 654,
-      pricePerNight: 185, priceTier: 'mid',
-      description: 'Modern mid-range hotel offering comfortable rooms, a rooftop pool, and easy access to Riyadh\'s main shopping and business districts.',
-      image: 'https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=600&q=80',
-      amenities: ['Pool', 'Gym', 'Restaurant', 'Breakfast', 'Wi-Fi'],
-      category: 'Business Hotel',
-    },
-    {
-      id: 5,
-      name: 'InterContinental Riyadh',
-      location: 'Al Murooj, Riyadh',
-      lat: 24.7097, lng: 46.6745,
-      rating: 4.6, reviews: 1102,
-      pricePerNight: 520, priceTier: 'luxury',
-      description: 'Set in lush gardens in the heart of Riyadh, this elegant hotel features multiple restaurants, manicured pools, and a renowned wellness spa.',
-      image: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600&q=80',
-      amenities: ['Pool', 'Spa', 'Gym', 'Restaurant', 'Garden', 'Concierge'],
-      category: 'Luxury Hotel',
-    },
-    {
-      id: 6,
-      name: 'Riyadh Marriott Hotel',
-      location: 'Al Ouruba Rd, Riyadh',
-      lat: 24.6938, lng: 46.7054,
-      rating: 4.4, reviews: 832,
-      pricePerNight: 280, priceTier: 'mid',
-      description: 'Polished full-service hotel close to the diplomatic quarter with expansive conference facilities and a relaxing outdoor pool.',
-      image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&q=80',
-      amenities: ['Pool', 'Gym', 'Restaurant', 'Business center', 'Wi-Fi'],
-      category: 'Business Hotel',
-    },
-    {
-      id: 7,
-      name: 'Ritz-Carlton Riyadh',
-      location: 'Al Hada District, Riyadh',
-      lat: 24.7050, lng: 46.6891,
-      rating: 4.9, reviews: 3102,
-      pricePerNight: 1100, priceTier: 'luxury',
-      description: 'A palatial oasis inspired by traditional Arabian architecture, surrounded by 52 acres of lush gardens. Legendary service and royal-level comfort.',
-      image: 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=600&q=80',
-      amenities: ['Pool', 'Spa', 'Gym', 'Restaurant', 'Bar', 'Butler service', 'Garden'],
-      category: 'Luxury Palace',
-    },
-    {
-      id: 8,
-      name: 'Hilton Riyadh Hotel',
-      location: 'Prince Sultan St, Riyadh',
-      lat: 24.7198, lng: 46.6472,
-      rating: 4.3, reviews: 745,
-      pricePerNight: 220, priceTier: 'mid',
-      description: 'Well-positioned hotel near the embassies and upscale neighbourhoods, offering reliable Hilton quality with a large outdoor pool and business facilities.',
-      image: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=600&q=80',
-      amenities: ['Pool', 'Gym', 'Restaurant', 'Business center', 'Concierge'],
-      category: 'Business Hotel',
-    },
-    {
-      id: 9,
-      name: 'Boudl Al Tahlia Suites',
-      location: 'Al Tahlia St, Riyadh',
-      lat: 24.7015, lng: 46.6600,
-      rating: 3.9, reviews: 412,
-      pricePerNight: 95, priceTier: 'budget',
-      description: 'Comfortable apartment-style suites on the lively Al Tahlia strip — perfect for budget travellers who want to be close to cafes and restaurants.',
-      image: 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=600&q=80',
-      amenities: ['Kitchenette', 'Wi-Fi', 'Parking', 'Breakfast'],
-      category: 'Budget Suites',
-    },
-    {
-      id: 10,
-      name: 'Radisson Blu Riyadh',
-      location: 'Al Maather St, Riyadh',
-      lat: 24.6820, lng: 46.7100,
-      rating: 4.1, reviews: 589,
-      pricePerNight: 160, priceTier: 'mid',
-      description: 'Sleek Scandinavian-designed rooms south of the city centre, close to King Abdullah Financial District, with a rooftop pool and all-day dining.',
-      image: 'https://images.unsplash.com/photo-1523192193543-6e7296d960e4?w=600&q=80',
-      amenities: ['Pool', 'Gym', 'Restaurant', 'Bar', 'Wi-Fi'],
-      category: 'Design Hotel',
-    },
-  ];
+  let HOTELS = [];
+
+  async function loadPlaces() {
+    try {
+      const response = await fetch('http://127.0.0.1:8080/api/v1/places/');
+      if (response.ok) {
+        const places = await response.json();
+        HOTELS = places.map(p => ({
+          id: p.id,
+          name: p.title || p.name || 'Untitled',
+          location: (p.city && p.country) ? `${p.city}, ${p.country}` : (p.city || p.country || 'Unknown location'),
+          lat: parseFloat(p.latitude) || 24.7136,
+          lng: parseFloat(p.longitude) || 46.6753,
+          rating: p.rating || 0,
+          reviews: p.reviews || 0,
+          pricePerNight: p.price || 0,
+          priceTier: (p.price || 0) < 150 ? 'budget' : ((p.price || 0) < 500 ? 'mid' : 'luxury'),
+          description: p.description || '',
+          image: p.image_url || 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600&q=80',
+          amenities: p.amenities ? p.amenities.map(a => a.name) : [],
+          category: p.type || 'Property'
+        }));
+      }
+    } catch (e) {
+      console.error('Failed to fetch places map data', e);
+    }
+  }
 
   // Map centred on Riyadh
   const DEFAULT_CENTER = [24.7136, 46.6753];
@@ -159,10 +64,10 @@ const HotelData = (() => {
   }
 
   function getById(id) {
-    return HOTELS.find(h => h.id === Number(id)) || null;
+    return HOTELS.find(h => String(h.id) === String(id)) || null;
   }
 
-  return { HOTELS, DEFAULT_CENTER, DEFAULT_ZOOM, priceTierLabel, formatPrice, filterHotels, getById };
+  return { get HOTELS() { return HOTELS; }, DEFAULT_CENTER, DEFAULT_ZOOM, priceTierLabel, formatPrice, filterHotels, getById, loadPlaces };
 })();
 
 
@@ -407,7 +312,7 @@ const HotelList = (() => {
                  fill="currentColor" stroke="currentColor" stroke-width="1">
               <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
             </svg>
-            ${hotel.rating}
+            ${hotel.reviews > 0 ? hotel.rating : 'New'}
             <span style="font-weight:400;color:var(--text-secondary);">(${hotel.reviews})</span>
           </div>
           <div class="hotel-list-price">${HotelData.formatPrice(hotel.pricePerNight)}/night</div>
@@ -484,6 +389,14 @@ const HotelPanel = (() => {
     const content = $('panel-content');
     if (!content) return;
 
+    //
+    const escape = (str) => {
+      if (!str) return '';
+      return String(str).replace(/[&<>"']/g, m => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
+      })[m]);
+    };
+
     const tier = HotelData.priceTierLabel[hotel.priceTier] || '$';
     const amenities = hotel.amenities.map(a =>
       `<div class="panel-amenity">
@@ -491,23 +404,23 @@ const HotelPanel = (() => {
               fill="none" stroke="currentColor" stroke-width="2.5"
               stroke-linecap="round" stroke-linejoin="round">
            <polyline points="20 6 9 17 4 12"/>
-         </svg>${a}
+         </svg>${escape(a)}
        </div>`
     ).join('');
 
     content.innerHTML = `
-      <img class="panel-hero" src="${hotel.image}" alt="${hotel.name}"
+      <img class="panel-hero" src="${escape(hotel.image)}" alt="${escape(hotel.name)}"
            onerror="this.src='https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=600&q=70'">
       <div class="panel-body">
-        <div class="panel-category">${hotel.category}</div>
-        <h2 class="panel-name">${hotel.name}</h2>
+        <div class="panel-category">${escape(hotel.category)}</div>
+        <h2 class="panel-name">${escape(hotel.name)}</h2>
         <div class="panel-location">
           <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24"
                fill="none" stroke="currentColor" stroke-width="2"
                stroke-linecap="round" stroke-linejoin="round">
             <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
             <circle cx="12" cy="10" r="3"/>
-          </svg>${hotel.location}
+          </svg>${escape(hotel.location)}
         </div>
 
         <div class="panel-rating-row">
@@ -515,7 +428,7 @@ const HotelPanel = (() => {
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
                  fill="currentColor" stroke="currentColor" stroke-width="1">
               <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-            </svg>${hotel.rating}
+            </svg>${hotel.reviews > 0 ? hotel.rating : 'New'}
           </div>
           <div class="panel-reviews">${hotel.reviews.toLocaleString()} reviews</div>
         </div>
@@ -525,12 +438,12 @@ const HotelPanel = (() => {
           <div class="panel-price-tier">${tier}</div>
         </div>
 
-        <p class="panel-description">${hotel.description}</p>
+        <p class="panel-description">${escape(hotel.description)}</p>
 
         <div class="panel-amenities">${amenities}</div>
 
         <div class="panel-cta-row">
-          <a href="place.html" class="panel-btn-primary">View Full Details</a>
+          <a href="place.html?id=${hotel.id}" class="panel-btn-primary">View Full Details</a>
           <button class="panel-btn-secondary" id="panel-save-btn">
             <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"
                  fill="none" stroke="currentColor" stroke-width="2"
@@ -678,7 +591,7 @@ const MapApp = (() => {
   let _map     = null;
   let _hotels  = [];
 
-  function init() {
+  async function init() {
     // 1. Theme
     const theme = localStorage.getItem('hbnb-theme') || 'light';
     document.documentElement.setAttribute('data-theme', theme);
@@ -694,6 +607,7 @@ const MapApp = (() => {
     HotelPanel.wireClose();
 
     // 5. Load hotels
+    await HotelData.loadPlaces();
     _hotels = HotelData.filterHotels();
     HotelList.render(_hotels, _listClick);
     HotelMarkers.renderAll(_hotels, _map, _markerClick);

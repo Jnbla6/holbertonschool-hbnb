@@ -4,6 +4,7 @@ from flask_restx import Api
 from flask_jwt_extended import JWTManager
 from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS
 
 
 jwt = JWTManager()
@@ -12,8 +13,14 @@ db = SQLAlchemy()
 
 def create_app(config_class="config.DevelopmentConfig"):
     app = Flask(__name__)
+    CORS(app, resources={r"/api/v1/*": {"origins": "http://127.0.0.1:5500"}}, supports_credentials=True)
     app.config.from_object(config_class)
 
+    # JWT configuration to allow tokens in cookies and disable CSRF for simplicity (not recommended for production)
+    app.config['JWT_TOKEN_LOCATION'] = ['cookies']
+    app.config['JWT_COOKIE_SECURE'] = False 
+    app.config['JWT_COOKIE_CSRF_PROTECT'] = True
+    
     jwt.init_app(app)
     bcrypt.init_app(app)
     db.init_app(app)
@@ -32,8 +39,8 @@ def create_app(config_class="config.DevelopmentConfig"):
     api.add_namespace(reviews_ns, path='/api/v1/reviews')
     api.add_namespace(place_ns, path='/api/v1/places')
     api.add_namespace(auth_ns, path='/api/v1/auth')
-
-
-
+    
+    with app.app_context():
+        db.create_all()
 
     return app

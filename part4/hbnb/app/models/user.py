@@ -16,14 +16,21 @@ class User(BaseModel):
     password = Column(String(128), nullable=False)
     is_admin = Column(Boolean, default=False)
 
-    places = relationship('Place', backref='user', lazy=True)
-    reviews = relationship('Review', backref='user', lazy=True)
+    places = relationship('Place', backref='user', lazy=True, cascade="all, delete-orphan")
+    reviews = relationship('Review', backref='user', lazy=True, cascade="all, delete-orphan")
 
     def __init__(self, **kwargs):
         
         if 'password' in kwargs:
             kwargs['password'] = self.hash_password(kwargs['password'])
         super().__init__(**kwargs)
+
+    def update(self, data):
+        """Override update to securely hash password before saving"""
+        if 'password' in data and data['password']:
+            data['password'] = self.hash_password(data['password'])
+        
+        super().update(data)
 
     @validates('email')
     def validate_email(self, key, email):
