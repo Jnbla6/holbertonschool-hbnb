@@ -14,3 +14,13 @@ export function getCookie(name) {
     .find(r => r.startsWith(name + '='))
     ?.split('=')[1] || null;
 }
+
+export function escapeHTML(str) {
+  if (str === null || str === undefined) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}

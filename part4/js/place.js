@@ -1,4 +1,4 @@
-import { getCookie } from './utils.js';
+import { getCookie, escapeHTML} from './utils.js';
 import { initTheme, setupThemeToggle } from './theme.js';
 import { isLoggedIn, checkAuthentication, initAccountMenu } from './auth.js';
 
@@ -221,14 +221,14 @@ document.addEventListener('DOMContentLoaded', async () => {
             article.className = 'review-card';
             article.innerHTML = `
               <div class="review-card-header">
-                <div class="reviewer-avatar" style="background:${color};" aria-hidden="true">${r.user_initial || '?'}</div>
+                <div class="reviewer-avatar" style="background:${color};" aria-hidden="true">${escapeHTML(r.user_initial || '?')}</div>
                 <div>
-                  <div class="reviewer-name">${r.user_name || 'Anonymous'}</div>
+                  <div class="reviewer-name">${escapeHTML(r.user_name || 'Anonymous')}</div>
                   <div class="reviewer-date">${date}</div>
                 </div>
               </div>
               <div class="review-rating" aria-label="${r.rating} out of 5 stars">${stars}</div>
-              <p class="review-text">${r.text}</p>
+              <p class="review-text">${escapeHTML(r.text)}</p>
             `;
             reviewsGrid.appendChild(article);
           });

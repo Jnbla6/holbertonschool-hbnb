@@ -3,6 +3,7 @@
 import { verifySession, getCsrfToken } from './auth.js';
 import { initTheme, setupThemeToggle } from './theme.js';
 import { checkAuthentication, initAccountMenu } from './auth.js';
+import { $, escapeHTML } from './utils.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
   // 1. init theme and auth
@@ -55,8 +56,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         const isAdmin = user.is_admin;
         const isSelf = String(user.id) === String(currentUserId);
         tr.innerHTML = `
-                    <td><strong>${user.first_name} ${user.last_name}</strong>${isSelf ? ' <span style="font-size:0.72rem; color:var(--primary); font-weight:600;">(You)</span>' : ''}</td>
-                    <td>${user.email}</td>
+                    <td><strong>${escapeHTML(user.first_name)} ${escapeHTML(user.last_name)}</strong>${isSelf ? ' <span style="font-size:0.72rem; color:var(--primary); font-weight:600;">(You)</span>' : ''}</td>
+                    <td>${escapeHTML(user.email)}</td>
                     <td><span class="${isAdmin ? 'badge-admin' : 'badge-user'}">${isAdmin ? 'Admin' : 'User'}</span></td>
                     <td>
                         <div class="btn-actions">
@@ -65,7 +66,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 : `<button class="btn-sm ${isAdmin ? 'btn-demote' : 'btn-promote'}" data-toggle-id="${user.id}">
                                 ${isAdmin ? 'Demote' : 'Promote'}
                             </button>
-                            <button class="btn-sm btn-delete" data-delete-id="${user.id}" data-name="${user.first_name} ${user.last_name}">Delete</button>`}
+                            <button class="btn-sm btn-delete" data-delete-id="${user.id}" data-name="${escapeHTML(user.first_name)} ${escapeHTML(user.last_name)}">Delete</button>`}
                         </div>
                     </td>
                 `;
@@ -113,7 +114,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           ? `<img src="${am.icon}" alt="icon" style="width: 1.2rem; height: 1.2rem; object-fit: contain;">`
           : `<span style="font-size:1.1rem;">${am.icon || '✓'}</span>`;
 
-        tag.innerHTML = `${iconHtml} <span>${am.name}</span><button class="delete-amenity" data-id="${am.id}" title="Delete">&times;</button>`;
+        tag.innerHTML = `${iconHtml} <span>${escapeHTML(am.name)}</span><button class="delete-amenity" data-id="${am.id}" title="Delete">&times;</button>`;
         container.appendChild(tag);
       });
 

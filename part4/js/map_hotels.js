@@ -389,6 +389,14 @@ const HotelPanel = (() => {
     const content = $('panel-content');
     if (!content) return;
 
+    //
+    const escape = (str) => {
+      if (!str) return '';
+      return String(str).replace(/[&<>"']/g, m => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
+      })[m]);
+    };
+
     const tier = HotelData.priceTierLabel[hotel.priceTier] || '$';
     const amenities = hotel.amenities.map(a =>
       `<div class="panel-amenity">
@@ -396,23 +404,23 @@ const HotelPanel = (() => {
               fill="none" stroke="currentColor" stroke-width="2.5"
               stroke-linecap="round" stroke-linejoin="round">
            <polyline points="20 6 9 17 4 12"/>
-         </svg>${a}
+         </svg>${escape(a)}
        </div>`
     ).join('');
 
     content.innerHTML = `
-      <img class="panel-hero" src="${hotel.image}" alt="${hotel.name}"
+      <img class="panel-hero" src="${escape(hotel.image)}" alt="${escape(hotel.name)}"
            onerror="this.src='https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=600&q=70'">
       <div class="panel-body">
-        <div class="panel-category">${hotel.category}</div>
-        <h2 class="panel-name">${hotel.name}</h2>
+        <div class="panel-category">${escape(hotel.category)}</div>
+        <h2 class="panel-name">${escape(hotel.name)}</h2>
         <div class="panel-location">
           <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24"
                fill="none" stroke="currentColor" stroke-width="2"
                stroke-linecap="round" stroke-linejoin="round">
             <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
             <circle cx="12" cy="10" r="3"/>
-          </svg>${hotel.location}
+          </svg>${escape(hotel.location)}
         </div>
 
         <div class="panel-rating-row">
@@ -430,7 +438,7 @@ const HotelPanel = (() => {
           <div class="panel-price-tier">${tier}</div>
         </div>
 
-        <p class="panel-description">${hotel.description}</p>
+        <p class="panel-description">${escape(hotel.description)}</p>
 
         <div class="panel-amenities">${amenities}</div>
 

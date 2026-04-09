@@ -1,4 +1,4 @@
-import { $, formatPrice, getCookie } from './utils.js';
+import { $, formatPrice, getCookie, escapeHTML} from './utils.js';
 import { initTheme, setupThemeToggle } from './theme.js';
 import { checkAuthentication, initAccountMenu } from './auth.js';
 
@@ -21,17 +21,17 @@ function createPlaceCard(place) {
   card.innerHTML = `
     <div class="place-card-image">
       <img
-        src="${place.image}"
-        alt="${place.name}"
+        src="${escapeHTML(place.image)}"
+        alt="${escapeHTML(place.name)}"
         loading="lazy"
         onerror="this.src='https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=600&q=80'"
       >
       ${badgeHTML}
-      <button class="place-card-wishlist" aria-label="Save ${place.name} to wishlist" data-id="${place.id}" aria-pressed="false">${SVG_HEART_EMPTY}</button>
+      <button class="place-card-wishlist" aria-label="Save ${escapeHTML(place.name)} to wishlist" data-id="${place.id}" aria-pressed="false">${SVG_HEART_EMPTY}</button>
     </div>
     <div class="place-card-body">
-      <div class="place-card-location">${SVG_PIN} ${place.location}</div>
-      <h3 class="place-card-name">${place.name}</h3>
+      <div class="place-card-location">${SVG_PIN} ${escapeHTML(place.location)}</div>
+      <h3 class="place-card-name">${escapeHTML(place.name)}</h3>
       <div class="place-card-meta">${place.guests} guests &middot; ${place.bedrooms} bedroom${place.bedrooms > 1 ? 's' : ''}</div>
       <div class="place-card-footer">
         <div class="place-card-price">
@@ -43,7 +43,7 @@ function createPlaceCard(place) {
             ${SVG_STAR} ${place.rating}
             <span style="color:var(--text-secondary); font-weight:400;">(${place.reviews})</span>
           </div>
-          <a href="place.html?id=${place.id}" class="details-button" aria-label="View details for ${place.name}">View Details</a>
+          <a href="place.html?id=${place.id}" class="details-button" aria-label="View details for ${escapeHTML(place.name)}">View Details</a>
         </div>
       </div>
     </div>
@@ -73,7 +73,10 @@ function createPlaceCard(place) {
       try {
         const res = await fetch(`http://127.0.0.1:8080/api/v1/places/${place.id}`, {
           method: 'DELETE',
-          headers: { 'Authorization': `Bearer ${getCookie('token')}` }
+          credentials: 'include',
+          headers: { 
+              'X-CSRF-TOKEN': getCookie('csrf_access_token') 
+          }
         });
         if (res.ok) {
           card.remove();

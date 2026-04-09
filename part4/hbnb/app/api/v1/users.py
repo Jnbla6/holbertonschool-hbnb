@@ -115,11 +115,15 @@ class UserToggleAdmin(Resource):
     @api.response(200, 'User admin status toggled')
     @api.response(404, 'User not found')
     @api.response(403, 'Admin privileges required')
+    @api.response(400, 'You cannot change your own admin status')
     @jwt_required()
     def put(self, user_id):
         """Toggle admin status for a user (admin only)"""
         if not get_jwt().get('is_admin', False):
             return {'error': 'Admin privileges required'}, 403
+        
+        if user_id == get_jwt_identity():
+            return {'error': 'You cannot change your own admin status'}, 400
 
         user = facade.get_user(user_id)
         if not user:

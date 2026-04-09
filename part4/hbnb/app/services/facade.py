@@ -150,11 +150,7 @@ class HBnBFacade:
                 if not new_owner:
                     return False, "New owner not found"
 
-                old_owner = place.owner
-                if place.id in old_owner.places:
-                    old_owner.places.remove(place.id)
-                new_owner.add_place(place)
-                place.owner = new_owner
+                place.owner_id = new_owner.id
 
             amenity_ids = place_data.pop('amenities', None)
             
