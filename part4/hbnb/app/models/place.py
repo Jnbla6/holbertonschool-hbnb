@@ -44,6 +44,8 @@ class Place(BaseModel):
     def validate_price(self, key, price):
         if price <= 0:
             raise ValueError(f'{key} must be a positive value')
+        if price > 100000:
+            raise ValueError(f'{key} exceeds maximum limit of 100000')
         return price
 
     @validates('latitude')
@@ -84,7 +86,7 @@ class Place(BaseModel):
 
     def to_dict(self):
         obj_dict = super().to_dict()
-        obj_dict['amenities'] = [{'id': a.id, 'name': a.name, 'icon': a.icon or '✓'} for a in self.amenities]
+        obj_dict['amenities'] = [{'id': a.id, 'name': a.name, 'icon': a.icon} for a in self.amenities]
         
         if hasattr(self, 'reviews') and self.reviews:
             valid_reviews = [r for r in self.reviews if getattr(r, 'rating', None) is not None]
@@ -100,7 +102,7 @@ class Place(BaseModel):
             
         return obj_dict
     
-    @validates('price_by_night', 'number_of_rooms', 'number_of_bathrooms', 'max_guests')
+    @validates('number_rooms', 'number_bathrooms', 'max_guests')
     def validate_integers(self, key, value):
         """
         Validates that the given value is a non-negative integer and within reasonable limits.
@@ -116,8 +118,7 @@ class Place(BaseModel):
         if val < 0:
             raise ValueError(f"{key} cannot be negative.")
             
-        limit = 100000 if key == 'price_by_night' else 1000
-        if val > limit:
-            raise ValueError(f"{key} exceeds the maximum allowed limit of {limit}.")
+        if val > 1000:
+            raise ValueError(f"{key} exceeds the maximum allowed limit of 1000.")
             
         return val
