@@ -20,7 +20,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   try {
-    const response = await fetch(`http://127.0.0.1:8080/api/v1/places/${placeId}`);
+	// Fetch place details with token if available (task3 requirement)
+    const token = getCookie('token');
+    const headers = {};
+    if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+    }
+    const response = await fetch(`http://127.0.0.1:8080/api/v1/places/${placeId}`, { headers });
     if (!response.ok) {
       alert("Place not found!");
       window.location.href = 'index.html';
