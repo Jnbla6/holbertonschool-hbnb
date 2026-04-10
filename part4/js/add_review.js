@@ -114,7 +114,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
-          'X-CSRF-TOKEN': getCookie('csrf_access_token')
+          'X-CSRF-TOKEN': getCookie('csrf_access_token'),
+
+		  // In real production web clients, relying on secure HttpOnly cookies (which is already implemented via credentials: 'include') is preferred to prevent XSS exfiltration.
+          'Authorization': `Bearer ${getCookie('token')}`
         },
         body: JSON.stringify({
           text: text,
