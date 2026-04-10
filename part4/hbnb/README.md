@@ -1,10 +1,10 @@
-# HBnB Evolution - Part 3
+# HBnB Evolution - Part 4
 
 ## Overview
 
-HBnB is an AirBnB clone project designed to practice object-oriented programming, API design, and system architecture. This phase of the project (Part 3) focuses on implementing **Authentication and Authorization** as well as migrating the storage layer from an In-Memory repository to a **Persistent Database Storage** using SQLAlchemy.
+HBnB is an AirBnB clone project designed to practice object-oriented programming, API design, system architecture, and full-stack integration. This phase of the project (Part 4) focuses on building and linking a **Dynamic Frontend Interface** to our existing RESTful API and persistent database.
 
-The system now secures API endpoints using **JWT authentication**, hashes user passwords using **Bcrypt**, and introduces database-backed repositories that manage entities through SQLAlchemy ORM models. Additionally, database initialization scripts are provided to simplify schema creation and initial data population.
+The system now features a functional client-side web application built with HTML5, CSS3, and JavaScript. It connects to the secured backend API using the Fetch API, handles JWT-based authentication via cookies, and dynamically renders data (places, user information, and reviews) directly from the database. The frontend also successfully reflects the extended model architectures, such as the `Place` model which now includes dynamic properties like `max_guests`, `number_rooms`, `number_bathrooms`, and `city`.
 
 ## Setup and Installation
 
@@ -12,6 +12,7 @@ The system now secures API endpoints using **JWT authentication**, hashes user p
 
 * Python 3.8 or higher.
 * SQLite3 or MySQL depending on environment configuration.
+* A modern web browser.
 
 ### Installation Instructions
 
@@ -47,61 +48,40 @@ These scripts create the database schema and populate initial data such as the *
 
 ### Running the Application
 
-From the root directory (`hbnb/`), execute the script to start the local web server:
+1. **Start the Backend API Server:**
+From the `hbnb/` directory, execute the script to start the local web server:
 
 ```bash
 python3 run.py
 ```
 
-The application will launch, running by default on
-`http://127.0.0.1:8080/`
+The API application will launch, running by default on `http://127.0.0.1:8080/`. You can browse the interactive Swagger UI and test the secured endpoints by navigating to `http://127.0.0.1:8080/api/v1/`.
 
-You can browse the interactive Swagger UI and test the secured endpoints by navigating to
-`http://127.0.0.1:8080/api/v1/`.
+2. **Access the Frontend Application:**
+Open the frontend HTML files (e.g., `index.html`) located in the root of the project directly in your browser, or start a simple Python static server in the directory containing the HTML files.
 
 ---
 
 ## Project Structure Explanation
 
-The project builds upon the architecture established in Part 2 and extends it to support **security and persistent storage**.
+The project builds upon the architecture established in prior parts and extends it to support a **full-stack application**.
 
-* **`app/`**: The core application module.
+### Backend Structure (`hbnb/`)
 
-  * **`app/__init__.py`**: Contains the setup for the Flask Application and integrates Flask-RESTx, SQLAlchemy, JWTManager, and Bcrypt.
+* **`app/`**: The core API application module.
+  * **`api/v1/`**: The API routing layer handling endpoints (auth, users, places, reviews, amenities).
+  * **`models/`**: The Domain Layer. Contains the SQLAlchemy models. Key models like `Place` have been expanded to include comprehensive properties like `max_guests`, `city`, and `image_url`.
+  * **`services/`**: The Business Logic layer and Facade design pattern.
+  * **`persistence/`**: The Storage layer using SQLAlchemy ORM.
+* **`schema.sql`** & **`seed.sql`**: Database initialization scripts mirroring the models.
+* **`tests/`**: Automated test files.
+* **`run.py`**: The API execution entry-point.
 
-  * **`app/api/`**: The presentation/presentation routing layer.
+### Frontend Structure
 
-    * **`app/api/v1/auth.py`**: Handles user authentication (`/login`) and JWT token generation.
-    * **`app/api/v1/users.py`**: Defines HTTP routing and endpoints handling User resources.
-    * **`app/api/v1/places.py`**: Defines HTTP routing and endpoints handling Place resources.
-    * **`app/api/v1/reviews.py`**: Defines HTTP routing and endpoints handling Review resources.
-    * **`app/api/v1/amenities.py`**: Defines HTTP routing and endpoints handling Amenity resources.
+Located primarily outside the `hbnb/` backend folder, the frontend consists of:
 
-  * **`app/models/`**: The Domain Layer.
-
-    * **`app/models/basemodel.py`**: Contains the base class handling UUIDs, timestamps, and SQLAlchemy model inheritance.
-    * **`app/models/user.py`**: Defines the `User` class with authentication attributes and database columns.
-    * **`app/models/place.py`**: Defines the `Place` class representing listings stored in the database.
-    * **`app/models/review.py`**: Defines the `Review` class representing feedback placed by users on listings.
-    * **`app/models/amenity.py`**: Defines the `Amenity` class representing available comforts/services at a place.
-
-  * **`app/services/`**: The Business Logic layer.
-
-    * **`app/services/facade.py`**: Implements the Facade design pattern (`HBnBFacade`), acting as an intermediate layer connecting API requests safely to the persistence layer.
-    * **`app/services/repositories/`**: Contains database-backed repositories for each entity (`user_repository.py`, `place_repository.py`, etc.).
-
-  * **`app/persistence/`**: The Storage layer.
-
-    * **`app/persistence/repository.py`**: Houses the SQLAlchemyRepository implementation alongside the legacy InMemoryRepository.
-
-* **`schema.sql`**: SQL script defining the database schema.
-
-* **`seed.sql`**: SQL script populating the database with initial data such as the Admin user and base amenities.
-
-* **`tests/`**: Contains automated test files covering Models creation, validation, and API endpoints testing.
-
-* **`config.py`**: Configuration setups (`DevelopmentConfig`, `ProductionConfig`) managing database URIs and secret keys.
-
-* **`requirements.txt`**: Enumerates the required external PyPI packages (including `flask-jwt-extended`, `flask-bcrypt`, and `flask-sqlalchemy`).
-
-* **`run.py`**: The main execution entry-point script to fire up the application.
+* **HTML Views**: `index.html`, `login.html`, `place.html`, `add_review.html`, `admin.html` representing distinct screens and workflows.
+* **`styles.css`**: The central CSS file containing design tokens and component styling.
+* **`js/`**: Contains modularized JavaScript logic (e.g., `scripts.js`, authentication checks, api wrappers) for dynamic content fetching and interaction.
+* **`images/`**: Static assets, including site backgrounds and specific amenity icons.

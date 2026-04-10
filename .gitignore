@@ -3,3 +3,6 @@ __pycache__/
 .DS_Store
 .vscode
 
+part4/hbnb/images/places/7916a6da20074ace8f2ff42dee6a858f.webp
+.gitignore
+part4/hbnb/instance/development.db
