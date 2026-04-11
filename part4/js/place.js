@@ -250,7 +250,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (bookNowBtn) {
       const session = await verifySession();
 
-      if (!session()) {
+      if (!session) {
         bookNowBtn.href = 'login.html';
         bookNowBtn.textContent = 'Log in to Reserve';
       } else {
