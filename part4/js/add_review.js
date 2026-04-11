@@ -46,39 +46,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   const token = getCookie('token');
   if (token) {
-    try {
-      // Decode JWT to get user ID
-      const payloadBase64 = token.split('.')[1];
-      const decodedPayload = JSON.parse(atob(payloadBase64));
-      const userId = decodedPayload.sub;
 
-      const userRes = await fetch(`http://127.0.0.1:8080/api/v1/users/${userId}`, {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      if (userRes.ok) {
-        const user = await userRes.json();
-        const reviewerNameInput = document.getElementById('reviewer-name');
-        if (reviewerNameInput) {
-          reviewerNameInput.value = `${user.first_name} ${user.last_name}`;
-          reviewerNameInput.readOnly = true;
-          reviewerNameInput.style.backgroundColor = 'var(--bg-hover)';
-        }
-      }
-    } catch (e) {
-      console.error("Could not fetch user info for review name", e);
-    }
   }
 
   const cancelBtn = document.getElementById('cancel-btn');
   if (cancelBtn) cancelBtn.href = `place.html?id=${placeId}`;
 
   const reviewTextarea = $('#review');
-  const counter = $('#char-count');
-  if (reviewTextarea && counter) {
-    reviewTextarea.addEventListener('input', () => {
-      counter.textContent = reviewTextarea.value.length;
-    });
-  }
+
 
   const ratingLabels = { '5': 'Excellent', '4': 'Great', '3': 'Good', '2': 'Fair', '1': 'Poor' };
   const ratingLabelEl = $('#rating-label');
@@ -131,7 +106,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         btn.style.background = '#008a80';
         form.reset();
         if (ratingLabelEl) ratingLabelEl.textContent = '';
-        if (counter) counter.textContent = '0';
+
 
         setTimeout(() => {
           window.location.href = `place.html?id=${placeId}`;
