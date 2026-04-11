@@ -51,9 +51,4 @@ document.addEventListener('DOMContentLoaded', () => {
       btn.disabled = false;
     }
   });
-
-  const googleBtn = $('#google-login-btn');
-  const githubBtn = $('#github-login-btn');
-  if (googleBtn) googleBtn.addEventListener('click', () => alert('OAuth integration coming soon!'));
-  if (githubBtn) githubBtn.addEventListener('click', () => alert('OAuth integration coming soon!'));
 });

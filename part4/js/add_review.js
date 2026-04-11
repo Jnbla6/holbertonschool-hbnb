@@ -1,6 +1,6 @@
 import { $, $$, getCookie } from './utils.js';
 import { initTheme, setupThemeToggle } from './theme.js';
-import { checkAuthentication, initAccountMenu } from './auth.js';
+import { checkAuthentication, initAccountMenu, verifySession } from './auth.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
   initTheme();
@@ -10,6 +10,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   const urlParams = new URLSearchParams(window.location.search);
   const placeId = urlParams.get('id');
+  const session = await verifySession();
+
+  if (!session) {
+      window.location.href = 'index.html';
+      return;
+  }
 
   if (!placeId) {
     alert("Place not specified!");
@@ -83,7 +89,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
-          'X-CSRF-TOKEN': getCookie('csrf_access_token')
+          'X-CSRF-TOKEN': getCookie('csrf_access_token'),
+
+		  // In real production web clients, relying on secure HttpOnly cookies (which is already implemented via credentials: 'include') is preferred to prevent XSS exfiltration.
+          'Authorization': `Bearer ${getCookie('token')}`
         },
         body: JSON.stringify({
           text: text,

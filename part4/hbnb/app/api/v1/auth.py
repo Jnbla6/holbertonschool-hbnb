@@ -40,7 +40,8 @@ class Login(Resource):
         
         # Step 4: Set the JWT token in a cookie and return a response
         response = make_response({
-            'message': 'Login successful', 
+            'message': 'Login successful',
+            'access_token': access_token,
             'user': {
                 'id': user.id,
                 'first_name': user.first_name,

@@ -20,7 +20,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   try {
-    const response = await fetch(`http://127.0.0.1:8080/api/v1/places/${placeId}`);
+	// Fetch place details with token if available (task3 requirement)
+    const token = getCookie('token');
+    const headers = {};
+    if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+    }
+    const response = await fetch(`http://127.0.0.1:8080/api/v1/places/${placeId}`, { headers });
     if (!response.ok) {
       alert("Place not found!");
       window.location.href = 'index.html';
@@ -173,11 +179,11 @@ document.addEventListener('DOMContentLoaded', async () => {
           amEl.className = 'amenity-item';
           const isUrl = am.icon && (am.icon.startsWith('http') || am.icon.includes('/'));
           const iconHtml = isUrl ? 
-            `<img src="${am.icon}" alt="${am.name}" style="width: 1.5rem; height: 1.5rem; border-radius: 4px; object-fit: cover;">` : 
+            `<img src="${am.icon}" alt="${escapeHTML(am.name)}" style="width: 1.5rem; height: 1.5rem; border-radius: 4px; object-fit: cover;">` : 
             `<span class="amenity-icon" style="font-size: 1.2rem; display: flex; align-items: center; justify-content: center;">${am.icon || '✓'}</span>`;
           amEl.innerHTML = `
             ${iconHtml}
-            <span>${am.name}</span>
+            <span>${escapeHTML(am.name)}</span>
           `;
           amenitiesContainer.appendChild(amEl);
         });

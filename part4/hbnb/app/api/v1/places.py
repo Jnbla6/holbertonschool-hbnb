@@ -47,7 +47,7 @@ place_model = api.model('Place', {
 class PlaceList(Resource):
     @api.expect(place_model)
     @api.response(201, 'Place successfully created')
-    @api.response(400, 'Invalid input data')
+    @api.response(400, 'Invalid input data / Invalid data type for numeric fields')
     @jwt_required()
     def post(self):
         """Register a new place"""
@@ -59,12 +59,15 @@ class PlaceList(Resource):
                 'description': request.form.get('description'),
                 'owner_id': get_jwt_identity()
             }
-            if request.form.get('price'): place_data['price'] = float(request.form.get('price'))
-            if request.form.get('latitude'): place_data['latitude'] = float(request.form.get('latitude'))
-            if request.form.get('longitude'): place_data['longitude'] = float(request.form.get('longitude'))
-            if request.form.get('max_guests'): place_data['max_guests'] = int(request.form.get('max_guests'))
-            if request.form.get('number_rooms'): place_data['number_rooms'] = int(request.form.get('number_rooms'))
-            if request.form.get('number_bathrooms'): place_data['number_bathrooms'] = int(request.form.get('number_bathrooms'))
+            try:
+                if request.form.get('price'): place_data['price'] = float(request.form.get('price'))
+                if request.form.get('latitude'): place_data['latitude'] = float(request.form.get('latitude'))
+                if request.form.get('longitude'): place_data['longitude'] = float(request.form.get('longitude'))
+                if request.form.get('max_guests'): place_data['max_guests'] = int(request.form.get('max_guests'))
+                if request.form.get('number_rooms'): place_data['number_rooms'] = int(request.form.get('number_rooms'))
+                if request.form.get('number_bathrooms'): place_data['number_bathrooms'] = int(request.form.get('number_bathrooms'))
+            except ValueError:
+                return {'error': 'Invalid data type for numeric fields'}, 400
             if request.form.get('city'): place_data['city'] = request.form.get('city')
             if request.form.get('country'): place_data['country'] = request.form.get('country')
             
