@@ -1,6 +1,6 @@
 import { getCookie, escapeHTML} from './utils.js';
 import { initTheme, setupThemeToggle } from './theme.js';
-import { isLoggedIn, checkAuthentication, initAccountMenu } from './auth.js';
+import { verifySession, checkAuthentication, initAccountMenu } from './auth.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
   initTheme();
@@ -248,7 +248,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     const bookNowBtn = document.getElementById('book-now-btn');
     if (bookNowBtn) {
-      if (!isLoggedIn()) {
+      const session = await verifySession();
+
+      if (!session()) {
         bookNowBtn.href = 'login.html';
         bookNowBtn.textContent = 'Log in to Reserve';
       } else {
