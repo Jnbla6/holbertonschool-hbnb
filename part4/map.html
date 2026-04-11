@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Discover hotels near you on an interactive map. Filter by price and rating on HBNB.">
+    <meta name="description"
+        content="Discover hotels near you on an interactive map. Filter by price and rating on HBNB.">
     <title>Explore on Map &mdash; HBNB</title>
     <link rel="icon" type="image/png" href="images/icon.png">
 
@@ -18,6 +20,7 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="map.css">
 </head>
+
 <body class="map-page">
 
     <!-- ===== MAP HEADER ===== -->
@@ -27,47 +30,68 @@
                 <img src="images/logo.png" alt="HBNB Logo" class="logo">
             </a>
 
-            <!-- Search Bar -->
-            <div class="map-search-wrap" role="search">
-                <div class="map-search-bar">
-                    <svg class="map-search-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                    <input
-                        type="text"
-                        id="map-search-input"
-                        class="map-search-input"
-                        placeholder="Search city, address, or landmark..."
-                        autocomplete="off"
-                        aria-label="Search location"
-                    >
-                    <button class="map-search-clear" id="search-clear-btn" aria-label="Clear search" style="display:none;">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                    </button>
-                </div>
-                <!-- Autocomplete dropdown -->
-                <ul class="map-search-dropdown" id="search-dropdown" role="listbox" aria-label="Search suggestions"></ul>
-            </div>
 
             <!-- Nav -->
             <nav class="map-nav" aria-label="Map navigation">
                 <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
-                    <svg id="icon-moon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-                    <svg id="icon-sun" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                    <svg id="icon-moon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                    </svg>
+                    <svg id="icon-sun" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" style="display:none;">
+                        <circle cx="12" cy="12" r="5" />
+                        <line x1="12" y1="1" x2="12" y2="3" />
+                        <line x1="12" y1="21" x2="12" y2="23" />
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+                        <line x1="1" y1="12" x2="3" y2="12" />
+                        <line x1="21" y1="12" x2="23" y2="12" />
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+                    </svg>
                 </button>
                 <a href="index.html" class="map-nav-link">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                        <polyline points="9 22 9 12 15 12 15 22" />
+                    </svg>
                     Back to listings
                 </a>
                 <a href="login.html" class="login-button" id="login-link">Login</a>
-                <a href="add_place.html" class="login-button" id="add-place-link" style="display: none; margin-right: 0.5rem;">Add a Place</a>
-                <div class="account-menu" id="account-menu" style="display: none; position: relative; margin-left: 0.5rem;">
-                    <button class="account-btn" id="account-btn" aria-label="Account menu" style="background:none; border:none; cursor:pointer; color: var(--text);">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                <a href="add_place.html" class="login-button" id="add-place-link"
+                    style="display: none; margin-right: 0.5rem;">Add a Place</a>
+                <div class="account-menu" id="account-menu"
+                    style="display: none; position: relative; margin-left: 0.5rem;">
+                    <button class="account-btn" id="account-btn" aria-label="Account menu"
+                        style="background:none; border:none; cursor:pointer; color: var(--text);">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                            <circle cx="12" cy="7" r="4" />
+                        </svg>
                     </button>
-                    <div class="account-dropdown" id="account-dropdown" style="display: none; position: absolute; right: 0; top: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); padding: 0.5rem 0; min-width: 150px; z-index: 100; margin-top: 0.5rem;">
-                        <a href="#" id="become-owner-link" style="display: block; padding: 0.5rem 1.2rem; color: var(--text); text-decoration: none; font-size: 0.95rem; font-weight: 500; transition: background 0.2s;" onmouseover="this.style.background='var(--bg-hover)'" onmouseout="this.style.background='transparent'">Become Owner</a>
-                        <a href="#" id="switch-traveler-link" style="display: none; padding: 0.5rem 1.2rem; color: var(--text); text-decoration: none; font-size: 0.95rem; font-weight: 500; transition: background 0.2s;" onmouseover="this.style.background='var(--bg-hover)'" onmouseout="this.style.background='transparent'">Switch to Traveler</a>
-                        <a href="admin.html" id="admin-link" style="display: none; padding: 0.5rem 1.2rem; color: #FF385C; text-decoration: none; font-size: 0.95rem; font-weight: 600; transition: background 0.2s;" onmouseover="this.style.background='var(--bg-hover)'" onmouseout="this.style.background='transparent'">⚙ Admin Dashboard</a>
-                        <a href="#" id="logout-link" style="display: block; padding: 0.5rem 1.2rem; color: var(--text); text-decoration: none; font-size: 0.95rem; font-weight: 500; transition: background 0.2s;" onmouseover="this.style.background='var(--bg-hover)'" onmouseout="this.style.background='transparent'">Log out</a>
+                    <div class="account-dropdown" id="account-dropdown"
+                        style="display: none; position: absolute; right: 0; top: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); padding: 0.5rem 0; min-width: 150px; z-index: 100; margin-top: 0.5rem;">
+                        <a href="#" id="become-owner-link"
+                            style="display: block; padding: 0.5rem 1.2rem; color: var(--text); text-decoration: none; font-size: 0.95rem; font-weight: 500; transition: background 0.2s;"
+                            onmouseover="this.style.background='var(--bg-hover)'"
+                            onmouseout="this.style.background='transparent'">Become Owner</a>
+                        <a href="#" id="switch-traveler-link"
+                            style="display: none; padding: 0.5rem 1.2rem; color: var(--text); text-decoration: none; font-size: 0.95rem; font-weight: 500; transition: background 0.2s;"
+                            onmouseover="this.style.background='var(--bg-hover)'"
+                            onmouseout="this.style.background='transparent'">Switch to Traveler</a>
+                        <a href="admin.html" id="admin-link"
+                            style="display: none; padding: 0.5rem 1.2rem; color: #FF385C; text-decoration: none; font-size: 0.95rem; font-weight: 600; transition: background 0.2s;"
+                            onmouseover="this.style.background='var(--bg-hover)'"
+                            onmouseout="this.style.background='transparent'">⚙ Admin Dashboard</a>
+                        <a href="#" id="logout-link"
+                            style="display: block; padding: 0.5rem 1.2rem; color: var(--text); text-decoration: none; font-size: 0.95rem; font-weight: 500; transition: background 0.2s;"
+                            onmouseover="this.style.background='var(--bg-hover)'"
+                            onmouseout="this.style.background='transparent'">Log out</a>
                     </div>
                 </div>
             </nav>
@@ -82,20 +106,13 @@
 
             <!-- Filters -->
             <div class="sidebar-filters">
-                <div class="filters-row">
-                    <div class="filter-chip-group" aria-label="Filter by price">
-                        <span class="filter-chip-label">Price</span>
-                        <button class="filter-chip active" data-filter="price" data-value="all" id="price-all">All</button>
-                        <button class="filter-chip" data-filter="price" data-value="budget" id="price-budget">$</button>
-                        <button class="filter-chip" data-filter="price" data-value="mid" id="price-mid">$$</button>
-                        <button class="filter-chip" data-filter="price" data-value="luxury" id="price-luxury">$$$</button>
-                    </div>
+                <div style="display:flex; align-items:center; gap:0.65rem; margin-bottom:0.75rem;">
+                    <span class="filter-chip-label">Rating</span>
                     <div class="filter-chip-group" aria-label="Filter by rating">
-                        <span class="filter-chip-label">Rating</span>
                         <button class="filter-chip active" data-filter="rating" data-value="all" id="rating-all">All</button>
-                        <button class="filter-chip" data-filter="rating" data-value="3" id="rating-3">3+</button>
-                        <button class="filter-chip" data-filter="rating" data-value="4" id="rating-4">4+</button>
-                        <button class="filter-chip" data-filter="rating" data-value="4.5" id="rating-45">4.5+</button>
+                        <button class="filter-chip" data-filter="rating" data-value="3" id="rating-3">3 ★+</button>
+                        <button class="filter-chip" data-filter="rating" data-value="4" id="rating-4">4 ★+</button>
+                        <button class="filter-chip" data-filter="rating" data-value="4.5" id="rating-45">4.5 ★+</button>
                     </div>
                 </div>
                 <div class="results-count" id="results-count" aria-live="polite">
@@ -114,7 +131,12 @@
 
             <!-- Sidebar Toggle (mobile) -->
             <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle hotel list">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12" />
+                    <line x1="3" y1="6" x2="21" y2="6" />
+                    <line x1="3" y1="18" x2="21" y2="18" />
+                </svg>
                 <span id="sidebar-toggle-label">Show list</span>
             </button>
         </aside>
@@ -125,14 +147,31 @@
 
             <!-- Map Controls overlay -->
             <div class="map-controls-overlay">
-                <button class="map-ctrl-btn" id="locate-me-btn" title="Find my location" aria-label="Use my current location">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+                <button class="map-ctrl-btn" id="locate-me-btn" title="Find my location"
+                    aria-label="Use my current location">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="3" />
+                        <path
+                            d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83" />
+                    </svg>
                 </button>
                 <button class="map-ctrl-btn" id="zoom-in-btn" title="Zoom in" aria-label="Zoom in">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8" />
+                        <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                        <line x1="11" y1="8" x2="11" y2="14" />
+                        <line x1="8" y1="11" x2="14" y2="11" />
+                    </svg>
                 </button>
                 <button class="map-ctrl-btn" id="zoom-out-btn" title="Zoom out" aria-label="Zoom out">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8" />
+                        <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                        <line x1="8" y1="11" x2="14" y2="11" />
+                    </svg>
                 </button>
             </div>
 
@@ -145,7 +184,11 @@
     <!-- ===== HOTEL DETAIL PANEL (slides in on marker click) ===== -->
     <div class="hotel-detail-panel" id="hotel-detail-panel" aria-label="Hotel details" aria-hidden="true">
         <button class="panel-close-btn" id="panel-close-btn" aria-label="Close hotel details">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
         </button>
         <div class="panel-content" id="panel-content">
             <!-- Filled dynamically -->
@@ -159,9 +202,10 @@
     <!-- Map scripts (self-contained — does NOT need scripts.js) -->
     <script src="js/map_hotels.js"></script>
     <script type="module">
-      import { checkAuthentication, initAccountMenu } from './js/auth.js';
-      checkAuthentication();
-      initAccountMenu();
+        import { checkAuthentication, initAccountMenu } from './js/auth.js';
+        checkAuthentication();
+        initAccountMenu();
     </script>
 </body>
+
 </html>
